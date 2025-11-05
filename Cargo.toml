@@ -1,8 +1,7 @@
 [package]
-name = "test-listener"
+name = "hypr-restore"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
 regex = "1.12.2"
-file = "1.1.2"

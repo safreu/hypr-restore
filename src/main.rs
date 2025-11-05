@@ -4,7 +4,7 @@ mod event_db;
 mod file_handler;
 mod ignored_handler;
 
-use std::io::{BufRead, Write};
+use std::io::{BufRead};
 use crate::event_db::EventDb;
 use crate::event_entry::EventEntry;
 use crate::ignored_handler::IgnoredClasses;
