@@ -39,15 +39,4 @@ impl EventEntry {
         self.address.as_str()
     }
 
-    pub fn workspace(&self) -> &str {
-        self.workspace.as_str()
-    }
-
-    pub fn class(&self) -> &str {
-        self.class.as_str()
-    }
-
-    pub fn title(&self) -> &str {
-        self.title.as_str()
-    }
 }

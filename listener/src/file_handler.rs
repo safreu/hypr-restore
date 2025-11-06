@@ -20,7 +20,6 @@ impl FileHandler {
             .open(&self.path)
             .expect("Could not open file");
         let mut writer = BufWriter::new(file);
-
         writeln!(writer, "{}", printable).expect("Failed to write to file");
         writer.flush()
     }
