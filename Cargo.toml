@@ -2,5 +2,7 @@
 members = [
     "listener",
     "restore",
+    "snapshot",
     "tui"
 ]
+resolver = "3"
