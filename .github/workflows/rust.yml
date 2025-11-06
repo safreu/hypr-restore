@@ -16,33 +16,41 @@ jobs:
 
     strategy:
       matrix:
-        toolchain:
-          - stable
-          - beta
-          - nightly
+        toolchain: [stable, beta, nightly]
 
     steps:
-      # 1️⃣ Checkout the repo
-      - uses: actions/checkout@v4
+      # 1️⃣ Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Needed for SonarQube analysis context
+          fetch-depth: 0 # Required for accurate Sonar analysis
 
-      # 2️⃣ Set up Rust toolchain
-      - name: Set up Rust
+      # 2️⃣ Set up Rust
+      - name: Set up Rust ${{ matrix.toolchain }}
         run: |
           rustup update ${{ matrix.toolchain }}
           rustup default ${{ matrix.toolchain }}
 
-      # 3️⃣ Build and test
+      # 3️⃣ Build
       - name: Build
         run: cargo build --verbose
 
-      - name: Test
+      # 4️⃣ Test
+      - name: Run tests
         run: cargo test --verbose
 
-      # 4️⃣ Run SonarQube/SonarCloud analysis
+      # 5️⃣ Run SonarQube scan (only for stable toolchain)
       - name: SonarQube Scan
+        if: matrix.toolchain == 'stable'
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      # (Optional) 6️⃣ Check Sonar Quality Gate (only for stable)
+      # Uncomment if you want the workflow to fail when quality gate fails
+      # - name: SonarQube Quality Gate
+      #   if: matrix.toolchain == 'stable'
+      #   uses: SonarSource/sonarqube-quality-gate-action@v1.1.0
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
