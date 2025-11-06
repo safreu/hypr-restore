@@ -1,4 +1,4 @@
-name: Build and Analyze (Rust)
+name: Build, Test, and Analyze (Rust)
 
 on:
   push:
@@ -11,7 +11,7 @@ env:
 
 jobs:
   build:
-    name: Build, Test, and Analyze
+    name: Rust Build, Test, and SonarQube Analysis
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,36 +19,58 @@ jobs:
         toolchain: [stable, beta, nightly]
 
     steps:
-      # 1️⃣ Checkout repository
+      # 1️⃣ Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Required for accurate Sonar analysis
+          fetch-depth: 0 # Needed for SonarQube analysis context
 
-      # 2️⃣ Set up Rust
+      # 2️⃣ Set up Rust toolchain
       - name: Set up Rust ${{ matrix.toolchain }}
         run: |
           rustup update ${{ matrix.toolchain }}
           rustup default ${{ matrix.toolchain }}
+          rustup component add clippy
 
       # 3️⃣ Build
       - name: Build
         run: cargo build --verbose
 
-      # 4️⃣ Test
-      - name: Run tests
-        run: cargo test --verbose
+      # 4️⃣ Run tests with coverage
+      - name: Install Tarpaulin
+        if: matrix.toolchain == 'stable'
+        run: cargo install cargo-tarpaulin
 
-      # 5️⃣ Run SonarQube scan (only for stable toolchain)
+      - name: Run tests with coverage
+        if: matrix.toolchain == 'stable'
+        run: cargo tarpaulin --out Xml
+
+      # 5️⃣ Run Clippy and export report
+      - name: Run Clippy
+        if: matrix.toolchain == 'stable'
+        run: cargo clippy --message-format=json > clippy-report.json || true
+
+      # 6️⃣ Run SonarQube analysis (only for stable)
       - name: SonarQube Scan
         if: matrix.toolchain == 'stable'
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=my_rust_project
+            -Dsonar.projectName="My Rust Project"
+            -Dsonar.projectVersion=1.0
+            -Dsonar.sources=src
+            -Dsonar.sourceEncoding=UTF-8
+            -Dsonar.language=rust
+            -Dsonar.rust.clippy.reportPaths=clippy-report.json
+            -Dsonar.rust.cargo.manifestPaths=Cargo.toml
+            -Dsonar.coverageReportPaths=tarpaulin-report.xml
+            -Dsonar.exclusions=**/target/**
 
-      # (Optional) 6️⃣ Check Sonar Quality Gate (only for stable)
-      # Uncomment if you want the workflow to fail when quality gate fails
+      # (Optional) 7️⃣ Check quality gate
       # - name: SonarQube Quality Gate
       #   if: matrix.toolchain == 'stable'
       #   uses: SonarSource/sonarqube-quality-gate-action@v1.1.0
