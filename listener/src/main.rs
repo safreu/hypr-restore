@@ -5,14 +5,15 @@ mod file_handler;
 mod ignored_handler;
 
 use std::io::{BufRead};
+use shared::{DB_PATH, IGNORE_PATH};
 use crate::event_db::EventDb;
 use crate::event_entry::EventEntry;
 use crate::ignored_handler::IgnoredHandler;
 use crate::instance_handler::InstanceHandler;
 
 fn main() -> std::io::Result<()> {
-    let ignored_handler = IgnoredHandler::new("ignore.txt");
-    let mut table: EventDb = EventDb::new("log.txt".to_string());
+    let ignored_handler = IgnoredHandler::new(IGNORE_PATH);
+    let mut table: EventDb = EventDb::new(DB_PATH.to_string());
     let instance = InstanceHandler::new();
 
     for line in instance.reader().lines() {
