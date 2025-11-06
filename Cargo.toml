@@ -2,6 +2,7 @@
 members = [
     "listener",
     "restore",
+    "shared",
     "snapshot",
     "tui"
 ]
