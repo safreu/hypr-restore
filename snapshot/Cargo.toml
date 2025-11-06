@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 shared = { path = "../shared"}
+tempfile = "3.23.0"
