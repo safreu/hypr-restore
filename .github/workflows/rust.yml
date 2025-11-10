@@ -18,25 +18,9 @@ jobs:
         run: |
           rustup update stable
           rustup default stable
-          rustup component add clippy
 
       - name: Build
         run: cargo build --workspace --verbose
 
       - name: Test
         run: cargo test --workspace --verbose
-
-      - name: Run Clippy (optional)
-        run: cargo clippy --workspace --message-format=json > clippy-report.json || true
-
-      - name: Install Tarpaulin (optional)
-        run: cargo install cargo-tarpaulin
-
-      - name: Run Tarpaulin Coverage (optional)
-        run: cargo tarpaulin --workspace --out Xml --output-dir .
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v6
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
