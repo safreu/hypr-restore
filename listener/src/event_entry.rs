@@ -22,9 +22,11 @@ impl EventEntry {
             .collect()
     }
 
-    pub fn open_window(address: String, workspace: String, class: String, title: String) -> Self {
+    pub fn new(address: String, workspace: String, class: String, title: String) -> Self {
+        let mut modified_address = address.clone();
+        if !address.starts_with("0x") { modified_address = format!("0x{}", address); }
         Self {
-            address: format!("0x{}", address),
+            address: modified_address,
             workspace,
             class,
             title

@@ -23,7 +23,7 @@ fn main() -> std::io::Result<()> {
                 
                 if line.contains("openwindow") && !ignored_handler.should_ignore(&parts[3], &parts[1]) {
                     table.insert(
-                        EventEntry::open_window(parts[1].clone(), parts[2].clone(), parts[3].clone(), parts[4].clone())
+                        EventEntry::new(parts[1].clone(), parts[2].clone(), parts[3].clone(), parts[4].clone())
                     );
                 }
                 if line.contains("closewindow") {
