@@ -4,7 +4,7 @@ use std::fs;
 use std::path::Path;
 use shared::{SNAPSHOT_PATH, DB_PATH};
 fn main() -> std::io::Result<()>{
-    create_snapshot(SNAPSHOT_PATH, DB_PATH)
+    create_snapshot(DB_PATH, SNAPSHOT_PATH)
 }
 
 pub fn create_snapshot(db_path: &str, snapshot_path: &str) -> std::io::Result<()> {
