@@ -22,14 +22,14 @@ impl EventEntry {
             .collect()
     }
 
-    pub fn new(address: String, workspace: String, class: String, title: String) -> Self {
-        let mut modified_address = address.clone();
-        if !address.starts_with("0x") { modified_address = format!("0x{}", address); }
+    pub fn new(event_as_string: &Vec<String>) -> Self {
+        let mut modified_address = event_as_string[1].clone();
+        if !event_as_string[1].starts_with("0x") { modified_address = format!("0x{}", event_as_string[1]); }
         Self {
             address: modified_address,
-            workspace,
-            class,
-            title
+            workspace: event_as_string[2].clone(),
+            class: event_as_string[3].clone(),
+            title: event_as_string[4].clone(),
         }
     }
     
@@ -40,5 +40,7 @@ impl EventEntry {
     pub fn address(&self) -> &str {
         self.address.as_str()
     }
+    
+    pub fn class(&self) -> &str { self.class.as_str() }
 
 }
