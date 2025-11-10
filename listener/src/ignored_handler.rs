@@ -1,8 +1,7 @@
 use std::collections::HashSet;
 use std::fs;
-use std::process::Command;
-use serde_json::Value;
 use crate::file_handler::FileHandler;
+use utils::utils;
 
 pub struct IgnoredHandler {
     ignored_classes: HashSet<String>,
@@ -25,31 +24,8 @@ impl IgnoredHandler {
         else { false }
     }
 
-    fn get_pid(address: &str) -> i64 {
-        let pid: i64= 0;
-        let output = Command::new("hyprctl")
-            .args(["clients", "-j"])
-            .output()
-            .expect("Failed to run hyprctl");
-
-        if !output.status.success() { return 0; }
-        let stdout = String::from_utf8_lossy(&output.stdout);
-
-        let json: Value = serde_json::from_str(&stdout)
-            .expect("Failed to parse output");
-
-        if let Some(array) = json.as_array() {
-            for value in array {
-                if value["address"] == address {
-                    return value["pid"].as_i64().unwrap_or(0);
-                }
-            }
-        }
-        pid
-    }
-
      fn should_skip(address: &str) -> bool {
-        let pid = Self::get_pid(address);
+        let pid = utils::get_pid(address);
         let path = format!("/proc/{pid}/environ");
         match fs::read_to_string(&path) {
             Ok(content) => {
