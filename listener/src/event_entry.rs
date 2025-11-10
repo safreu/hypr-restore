@@ -32,6 +32,17 @@ impl EventEntry {
             title: event_as_string[4].clone(),
         }
     }
+
+    pub fn new_without_event_type(event_as_string: &Vec<String>) -> Self {
+        let mut modified_address = event_as_string[0].clone();
+        if !event_as_string[0].starts_with("0x") { modified_address = format!("0x{}", event_as_string[0]); }
+        Self {
+            address: modified_address,
+            workspace: event_as_string[1].clone(),
+            class: event_as_string[2].clone(),
+            title: event_as_string[3].clone(),
+        }
+    }
     
     pub fn to_string(&self) -> String {
         format!("{},{},{},{}", self.address, self.workspace, self.class, self.title)
@@ -40,7 +51,7 @@ impl EventEntry {
     pub fn address(&self) -> &str {
         self.address.as_str()
     }
-    
+
     pub fn class(&self) -> &str { self.class.as_str() }
 
 }
