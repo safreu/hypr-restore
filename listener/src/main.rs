@@ -19,12 +19,16 @@ fn main() -> std::io::Result<()> {
     for line in instance.reader().lines() {
         match line {
             Ok(line) => {
-                let event: EventEntry = EventEntry::new(&EventEntry::split(&line));
-                if line.contains("openwindow") && !ignored_handler.should_ignore(event.class(), event.address()) {
-                    table.insert(event);
+                let parts = EventEntry::split(&line);
+                if line.contains("openwindow") {
+                    let event: EventEntry = EventEntry::new(&parts);
+                    if !ignored_handler.should_ignore(event.class(), event.address()) {
+                        table.insert(event);
+                    }
                 }
-                else if line.contains("closewindow") {
-                    table.remove(&event.address()).expect("Failed to remove entry");
+
+                if line.contains("closewindow") {
+                    table.remove(&parts[1]).expect("Failed to remove entry");
                 }
             }
             Err(_) => continue,
