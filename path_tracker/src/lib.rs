@@ -9,6 +9,7 @@ use std::io::Error;
 use listener::event_entry::EventEntry;
 use listener::file_handler::FileHandler;
 
+/// Contains the table which saves class \[KEY] and path \[VALUE] and the fileHandler to write them to in shared specified path
 struct ExecutablesMap {
     file_handler: FileHandler,
     table: HashMap<String, String>
@@ -37,8 +38,8 @@ impl ExecutablesMap {
     /// also writes it into the file if the table changes
     ///
     /// # Arguments
-    /// * `class` := the class for the application [KEY]
-    /// * `executable_path` := the path to execute the application [VALUE], can be determined with get_executable_path_from_env
+    /// * `class` := the class for the application \[KEY]
+    /// * `executable_path` := the path to execute the application \[VALUE], can be determined with get_executable_path_from_env
     ///
     /// # Return
     /// io::Result based on if the operation was successfully or not
