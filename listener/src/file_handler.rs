@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fs::{File, OpenOptions};
 use std::io;
 use std::io::{BufRead, BufReader, BufWriter, Write};
@@ -21,6 +21,16 @@ impl FileHandler {
             .expect("Could not open file");
         let mut writer = BufWriter::new(file);
         writeln!(writer, "{}", printable).expect("Failed to write to file");
+        writer.flush()
+    }
+
+    pub fn write_complete_hashmap(&mut self, entries: &HashMap<String, String>) -> io::Result<()> {
+        let file = File::create(&self.path)?;
+        let mut writer = BufWriter::new(file);
+
+        for entry in entries {
+            writeln!(writer, "{},{}", entry.0, entry.1).expect("Failed to write to file");
+        }
         writer.flush()
     }
 

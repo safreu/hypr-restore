@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "listener",
+    "path_tracker",
     "restore",
     "shared",
     "snapshot",

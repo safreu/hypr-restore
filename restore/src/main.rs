@@ -50,7 +50,7 @@ fn open_window_command(to_be_opened: &str) {
 
 fn move_window_command(workspace: &str, address: &str) {
     let _command = Command::new("hyprctl")
-        .args(["dispatch", "movetoworkspacesilent", "6", address])
+        .args(["dispatch", "movetoworkspacesilent", workspace, address])
         .output()
         .expect("Failed to run hyprctl");
 }
