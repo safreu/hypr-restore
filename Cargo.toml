@@ -6,6 +6,5 @@ members = [
     "shared",
     "snapshot",
     "tui",
-    "utils"
 ]
 resolver = "3"

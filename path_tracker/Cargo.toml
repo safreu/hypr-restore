@@ -3,7 +3,9 @@ name = "path_tracker"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+path = "src/lib.rs"
+
 [dependencies]
-listener = { path = "../listener" }
-utils = { path = "../utils" }
+shared = { path = "../shared" }
 tempfile = "3.23.0"

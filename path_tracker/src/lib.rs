@@ -7,18 +7,18 @@ mod tests;
 use std::collections::HashMap;
 use std::io;
 use std::io::Error;
-use listener::event_entry::EventEntry;
-use listener::file_handler::FileHandler;
+use shared::event_entry::EventEntry;
+use shared::file_handler::FileHandler;
 
 /// Contains the table which saves class \[KEY] and path \[VALUE] and the fileHandler to write them to in shared specified path
-struct ExecutablesMap {
+pub struct ExecutablesMap {
     file_handler: FileHandler,
     table: HashMap<String, String>
 }
 
 impl ExecutablesMap {
     /// Creates a new ExecutablesMap by instantiating the fileHandler and the table
-    fn new(path: &str) -> Self {
+    pub fn new(path: &str) -> Self {
         Self {
             file_handler: FileHandler::new(path.to_string()),
             table: HashMap::new()
@@ -27,7 +27,7 @@ impl ExecutablesMap {
     /// Initializes the table inside of Executables, by reading the file which contains the paths and writing them into the table,
     /// # Warning
     /// **Must** be called **after** new()
-    fn init(&mut self) {
+    pub fn init(&mut self) {
         let lines = self.file_handler.read_file().expect("Failed to read file");
         for line in lines {
             let split = EventEntry::split(&line);
@@ -44,7 +44,7 @@ impl ExecutablesMap {
     ///
     /// # Return
     /// io::Result based on if the operation was successfully or not
-    fn insert(&mut self, class: String, executable_path: String) -> io::Result<()> {
+    pub fn insert(&mut self, class: String, executable_path: String) -> io::Result<()> {
         if self.table.contains_key(&class) && self.table[&class] == executable_path { return Ok(()); }
         else { self.table.insert(class.clone(), executable_path.clone()); }
         self.file_handler.write_complete_hashmap(&self.table)
@@ -57,9 +57,9 @@ impl ExecutablesMap {
     ///
     /// # Returns
     /// the Path to execute the application
-    fn get_executable_path_from_env(address: &str) -> Result<String, Error> {
-        let pid = utils::get_pid(address);
-        utils::get_env_value("_=", &pid)
+    pub fn get_executable_path_from_env(address: &str) -> Result<String, Error> {
+        let pid = shared::get_pid(address);
+        shared::get_env_value("_=", &pid)
     }
 
     /// Gets the executable path in the table
@@ -69,7 +69,7 @@ impl ExecutablesMap {
     ///
     /// # Returns
     /// The Option of the entry
-    fn get_executable_entry(&mut self, class: &str) -> Option<String> {
+    pub fn get_executable_entry(&mut self, class: &str) -> Option<String> {
         if self.table.contains_key(class) {
             return Some(self.table[class].to_string())
         }

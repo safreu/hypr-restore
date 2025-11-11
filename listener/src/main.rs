@@ -1,13 +1,11 @@
-mod event_entry;
 mod instance_handler;
 mod event_db;
-mod file_handler;
 mod ignored_handler;
 
 use std::io::{BufRead};
 use shared::{DB_PATH, IGNORE_PATH};
 use crate::event_db::EventDb;
-use crate::event_entry::EventEntry;
+use shared::event_entry::EventEntry;
 use crate::ignored_handler::IgnoredHandler;
 use crate::instance_handler::InstanceHandler;
 

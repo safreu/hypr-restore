@@ -1,5 +1,5 @@
-use crate::event_entry::EventEntry;
-use crate::file_handler::FileHandler;
+use shared::event_entry::EventEntry;
+use shared::file_handler::FileHandler;
 
 pub struct EventDb {
     table: Vec<EventEntry>,

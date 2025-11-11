@@ -1,6 +1,6 @@
 use std::collections::HashSet;
-use crate::file_handler::FileHandler;
-use utils;
+use shared::file_handler::FileHandler;
+use shared;
 pub struct IgnoredHandler {
     ignored_classes: HashSet<String>,
 }
@@ -23,8 +23,8 @@ impl IgnoredHandler {
     }
 
      fn should_skip(address: &str) -> bool {
-         let pid = utils::get_pid(address);
-         match utils::get_env_value("RESTORE_SKIP=", &pid) {
+         let pid = shared::get_pid(address);
+         match shared::get_env_value("RESTORE_SKIP=", &pid) {
              Ok(value) => if value == "1" { true } else { false },
              Err(_) => false,
          }

@@ -12,6 +12,5 @@ name = "listener-bin"
 path = "src/main.rs"
 
 [dependencies]
-regex = "1.12.2"
 shared = { path = "../shared" }
-utils = { path = "../utils" }
+path_tracker = { path = "../path_tracker" }

@@ -1,8 +1,7 @@
 use std::process::Command;
-use listener::event_entry::EventEntry;
-use listener::file_handler::FileHandler;
+use shared::event_entry::EventEntry;
+use shared::file_handler::FileHandler;
 use shared::{DB_PATH, RESTORE_PATH};
-use utils;
 use snapshot::create_snapshot;
 
 fn main() {
@@ -18,9 +17,9 @@ fn open_window() {
     for line in to_be_restored {
         let entry = EventEntry::new_without_event_type(&EventEntry::split(&line));
         println!("{}", entry.address());
-        let pid = utils::get_pid(entry.address());
+        let pid = shared::get_pid(entry.address());
         println!("pid: {}", pid);
-        match utils::get_env_value("_=", &pid) {
+        match shared::get_env_value("_=", &pid) {
             Ok(value) => open_window_command(&value),
             Err(_) => open_window_command(&entry.class())
         }
@@ -28,13 +27,13 @@ fn open_window() {
 }
 
 fn move_window() {
-    let result = create_snapshot(DB_PATH, RESTORE_PATH, false);
+    let _ = create_snapshot(DB_PATH, RESTORE_PATH, false);
     let restore_handler = FileHandler::new(RESTORE_PATH.to_string());
     let to_be_moved = restore_handler.read_file().expect("Could not read file");
     for line in to_be_moved {
         let entry = EventEntry::new_without_event_type(&EventEntry::split(&line));
-        let pid = utils::get_pid(entry.address());
-        if utils::get_env_value("IS_RESTORED=", &pid).expect("Could not read file") == "1" {
+        let pid = shared::get_pid(entry.address());
+        if shared::get_env_value("IS_RESTORED=", &pid).expect("Could not read file") == "1" {
             move_window_command(entry.workspace(), entry.address());
         }
     }

@@ -3,7 +3,6 @@ mod tests {
     use std::io::{Read, Write};
     use std::fs::File;
     use tempfile::tempdir;
-    use crate::create_snapshot;
 
     #[test]
     fn create_snapshot_existing_path() {
@@ -12,7 +11,7 @@ mod tests {
         let snapshot_path = dir.path().join("test.snapshot");
 
         File::create(&db_path).unwrap();
-        let _ = create_snapshot(db_path.to_str().unwrap(), snapshot_path.to_str().unwrap(), true);
+        let _ = snapshot::create_snapshot(db_path.to_str().unwrap(), snapshot_path.to_str().unwrap(), true);
 
         assert_eq!(snapshot_path.exists(), true);
     }
@@ -24,7 +23,7 @@ mod tests {
         let snapshot_path = dir.path().join("test.snapshot");
 
         File::create(&db_path).unwrap();
-        let _ = create_snapshot(db_path.to_str().unwrap(), snapshot_path.to_str().unwrap(), true);
+        let _ = snapshot::create_snapshot(db_path.to_str().unwrap(), snapshot_path.to_str().unwrap(), true);
 
         assert_eq!(db_path.exists(), false);
     }
@@ -35,7 +34,7 @@ mod tests {
         let db_path = dir.path().join("not existing");
         let snapshot_path = dir.path().join("test.snapshot");
 
-        let _ = create_snapshot(db_path.to_str().unwrap(), snapshot_path.to_str().unwrap(), true);
+        let _ = snapshot::create_snapshot(db_path.to_str().unwrap(), snapshot_path.to_str().unwrap(), true);
 
         assert_eq!(db_path.exists(), false);
         assert_eq!(snapshot_path.exists(), false);
@@ -52,7 +51,7 @@ mod tests {
             writeln!(file, "test data").expect("Failed to write to db");
         }
 
-        let _ = create_snapshot(db_path.to_str().unwrap(), snapshot_path.to_str().unwrap(), true);
+        let _ = snapshot::create_snapshot(db_path.to_str().unwrap(), snapshot_path.to_str().unwrap(), true);
 
         let mut contents = String::new();
         File::open(&snapshot_path)

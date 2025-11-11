@@ -4,12 +4,12 @@ version = "0.1.0"
 edition = "2024"
 
 [lib]
-name = "snapshot"
 path = "src/lib.rs"
 
 [[bin]]
-name = "snapshot-bin"
+name = "snapshot"
 path = "src/main.rs"
+
 
 [dependencies]
 shared = { path = "../shared"}
