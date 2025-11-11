@@ -8,6 +8,7 @@
 classes.ignore
 tracker.db
 tracker.snapshot
+tracker.restore
 
 # User-specific stuff
 .idea/**/workspace.xml
