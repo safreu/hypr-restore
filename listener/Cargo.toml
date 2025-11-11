@@ -4,11 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [lib]
-name = "listener"
 path = "src/lib.rs"
 
 [[bin]]
-name = "listener-bin"
+name = "listener"
 path = "src/main.rs"
 
 [dependencies]

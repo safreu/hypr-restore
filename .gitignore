@@ -9,6 +9,7 @@ classes.ignore
 tracker.db
 tracker.snapshot
 tracker.restore
+executables.path
 
 # User-specific stuff
 .idea/**/workspace.xml
