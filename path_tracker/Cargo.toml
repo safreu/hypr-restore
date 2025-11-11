@@ -5,5 +5,5 @@ edition = "2024"
 
 [dependencies]
 listener = { path = "../listener" }
-shared = { path = "../shared" }
 utils = { path = "../utils" }
+tempfile = "3.23.0"

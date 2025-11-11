@@ -1,3 +1,4 @@
+mod tests;
 //TODO: get Address -> use it to get PID -> use it to get PATH
 //TODO: Write Path to file to save it
 //TODO: validate if Path is already in File -> Skip if exists || Write if not
@@ -17,9 +18,9 @@ struct ExecutablesMap {
 
 impl ExecutablesMap {
     /// Creates a new ExecutablesMap by instantiating the fileHandler and the table
-    fn new() -> Self {
+    fn new(path: &str) -> Self {
         Self {
-            file_handler: FileHandler::new(shared::EXECUTABLE_PATH.to_string()),
+            file_handler: FileHandler::new(path.to_string()),
             table: HashMap::new()
         }
     }
