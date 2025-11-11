@@ -24,7 +24,7 @@ impl IgnoredHandler {
 
      fn should_skip(address: &str) -> bool {
          let pid = utils::get_pid(address);
-         match utils::get_env_value("RESTORE_SKIP", &pid) {
+         match utils::get_env_value("RESTORE_SKIP=", &pid) {
              Ok(value) => if value == "1" { true } else { false },
              Err(_) => false,
          }
