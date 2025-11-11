@@ -49,7 +49,13 @@ impl FileHandler {
     }
 
     pub fn read_file(&self) -> io::Result<HashSet<String>> {
-        let file = File::open(&self.path).expect("Failed to open ignored classes");
+        let file = match File::open(&self.path) {
+            Ok(file) => file,
+            Err(_) => {
+                File::create(&self.path)?;
+                return Ok(HashSet::new());
+            },
+        };
         let reader = BufReader::new(file);
         let mut set:HashSet<String> = HashSet::new();
 
