@@ -3,6 +3,14 @@ name = "snapshot"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "snapshot"
+path = "src/main.rs"
+
+
 [dependencies]
 shared = { path = "../shared"}
 tempfile = "3.23.0"

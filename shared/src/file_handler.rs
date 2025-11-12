@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fs::{File, OpenOptions};
 use std::io;
 use std::io::{BufRead, BufReader, BufWriter, Write};
@@ -24,6 +24,16 @@ impl FileHandler {
         writer.flush()
     }
 
+    pub fn write_complete_hashmap(&mut self, entries: &HashMap<String, String>) -> io::Result<()> {
+        let file = File::create(&self.path)?;
+        let mut writer = BufWriter::new(file);
+
+        for entry in entries {
+            writeln!(writer, "{},{}", entry.0, entry.1).expect("Failed to write to file");
+        }
+        writer.flush()
+    }
+
     pub fn remove_line(&mut self, table: &mut Vec<EventEntry>) -> io::Result<()>  {
         let file = OpenOptions::new()
             .write(true)
@@ -39,7 +49,13 @@ impl FileHandler {
     }
 
     pub fn read_file(&self) -> io::Result<HashSet<String>> {
-        let file = File::open(&self.path).expect("Failed to open ignored classes");
+        let file = match File::open(&self.path) {
+            Ok(file) => file,
+            Err(_) => {
+                File::create(&self.path)?;
+                return Ok(HashSet::new());
+            },
+        };
         let reader = BufReader::new(file);
         let mut set:HashSet<String> = HashSet::new();
 

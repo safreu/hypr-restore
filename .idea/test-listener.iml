@@ -8,6 +8,8 @@
       <sourceFolder url="file://$MODULE_DIR$/tui/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/shared/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/snapshot/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/path_tracker/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/utils/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
