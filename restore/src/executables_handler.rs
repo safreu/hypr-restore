@@ -1,22 +1,16 @@
-mod tests;
-//TODO: get Address -> use it to get PID -> use it to get PATH
-//TODO: Write Path to file to save it
-//TODO: validate if Path is already in File -> Skip if exists || Write if not
-//TODO: later use it to execute the applications in restore
-//TODO: much later find solution if executing them over path is not desired
 use std::collections::HashMap;
-use std::io;
+use std::{fs, io};
 use std::io::Error;
 use shared::event_entry::EventEntry;
 use shared::file_handler::FileHandler;
 
 /// Contains the table which saves class \[KEY] and path \[VALUE] and the fileHandler to write them to in shared specified path
-pub struct ExecutablesMap {
-    file_handler: FileHandler,
-    table: HashMap<String, String>
+pub struct ExecutablesHandler {
+    pub(crate) file_handler: FileHandler,
+    pub(crate) table: HashMap<String, String>
 }
 
-impl ExecutablesMap {
+impl ExecutablesHandler {
     /// Creates a new ExecutablesMap by instantiating the fileHandler and the table
     pub fn new(path: &str) -> Self {
         Self {
@@ -44,6 +38,7 @@ impl ExecutablesMap {
     ///
     /// # Return
     /// io::Result based on if the operation was successfully or not
+    #[allow(dead_code)]
     pub fn insert(&mut self, class: String, executable_path: String) -> io::Result<()> {
         if self.table.contains_key(&class) && self.table[&class] == executable_path { return Ok(()); }
         else { self.table.insert(class.clone(), executable_path.clone()); }
@@ -57,9 +52,11 @@ impl ExecutablesMap {
     ///
     /// # Returns
     /// the Path to execute the application
+    #[allow(dead_code)]
     pub fn get_executable_path_from_env(address: &str) -> Result<String, Error> {
         let pid = shared::get_pid(address);
-        shared::get_env_value("_=", &pid)
+        let path = fs::read_link(format!("/proc/{}/exe", pid))?;
+        Ok(path.to_string_lossy().into_owned())
     }
 
     /// Gets the executable path in the table

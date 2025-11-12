@@ -1,56 +1,36 @@
+mod tests;
+mod executables_handler;
+
 use std::process::Command;
 use shared::event_entry::EventEntry;
 use shared::file_handler::FileHandler;
-use shared::{DB_PATH, RESTORE_PATH};
-use snapshot::create_snapshot;
+use shared::{EXECUTABLE_PATH, SNAPSHOT_PATH};
+use crate::executables_handler::ExecutablesHandler;
 
 fn main() {
     open_window();
-    std::thread::sleep(std::time::Duration::from_secs(2));
-    move_window();
 }
 
 fn open_window() {
-    let snapshot_handler: FileHandler = FileHandler::new(shared::SNAPSHOT_PATH.to_string());
+    let snapshot_handler: FileHandler = FileHandler::new(SNAPSHOT_PATH.to_string());
     let to_be_restored = snapshot_handler.read_file().expect("Could not read file");
+
+    let mut executables_handler = ExecutablesHandler::new(EXECUTABLE_PATH);
+    executables_handler.init();
 
     for line in to_be_restored {
         let entry = EventEntry::new_without_event_type(&EventEntry::split(&line));
-        println!("{}", entry.address());
-        let pid = shared::get_pid(entry.address());
-        println!("pid: {}", pid);
-        match shared::get_env_value("_=", &pid) {
-            Ok(value) => open_window_command(&value),
-            Err(_) => open_window_command(&entry.class())
+        match executables_handler.get_executable_entry(entry.class().trim()) {
+            Some(executable_entry) => open_window_command(entry.workspace(), &executable_entry),
+            None => open_window_command(entry.workspace(), entry.class())
         }
     }
 }
 
-fn move_window() {
-    let _ = create_snapshot(DB_PATH, RESTORE_PATH, false);
-    let restore_handler = FileHandler::new(RESTORE_PATH.to_string());
-    let to_be_moved = restore_handler.read_file().expect("Could not read file");
-    for line in to_be_moved {
-        let entry = EventEntry::new_without_event_type(&EventEntry::split(&line));
-        let pid = shared::get_pid(entry.address());
-        if shared::get_env_value("IS_RESTORED=", &pid).expect("Could not read file") == "1" {
-            move_window_command(entry.workspace(), entry.address());
-        }
-    }
-}
-
-fn open_window_command(to_be_opened: &str) {
+fn open_window_command(workspace: &str, to_be_opened: &str) {
+    println!("{}", to_be_opened);
     let _command = Command::new("hyprctl")
-        .env("IS_RESTORED", "1")
-        .args(["dispatch", "exec", to_be_opened])
+        .args(["dispatch", "exec", format!("[workspace {} silent] {}", workspace, to_be_opened).as_str()])
         .output()
         .expect("Failed to run hyprctl");
 }
-
-fn move_window_command(workspace: &str, address: &str) {
-    let _command = Command::new("hyprctl")
-        .args(["dispatch", "movetoworkspacesilent", workspace, address])
-        .output()
-        .expect("Failed to run hyprctl");
-}
-
