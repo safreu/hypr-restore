@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use std::fs::{File, OpenOptions};
-use std::io;
+use std::{io, thread};
 use std::io::{BufRead, BufReader, BufWriter, Write};
 use crate::event_entry::EventEntry;
 
@@ -63,5 +63,22 @@ impl FileHandler {
             set.insert(line?.to_lowercase());
         };
         Ok(set)
+    }
+
+    pub fn read_file_as_vec(&self) -> io::Result<Vec<String>> {
+        let file = match File::open(&self.path) {
+            Ok(file) => file,
+            Err(_) => {
+                File::create(&self.path)?;
+                return Ok(Vec::new());
+            },
+        };
+        let reader = BufReader::new(file);
+        let mut vec:Vec<String> = Vec::new();
+
+        for line in reader.lines() {
+            vec.push(line?.to_lowercase());
+        };
+        Ok(vec)
     }
 }
