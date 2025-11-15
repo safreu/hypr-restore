@@ -1,14 +1,43 @@
 use std::{fs, io};
 use std::io::ErrorKind;
+use std::path::PathBuf;
 use std::process::Command;
 use serde_json::Value;
 
 pub mod event_entry;
 pub mod file_handler;
-pub const DB_PATH: &str = "./tracker.db";
-pub const IGNORE_PATH: &str = "./classes.ignore";
-pub const SNAPSHOT_PATH: &str = "./tracker.snapshot";
-pub const EXECUTABLE_PATH: &str = "./executables.path";
+pub const DB_FILE: &str = "tracker.db";
+pub const IGNORE_FILE: &str = "classes.ignore";
+pub const SNAPSHOT_FILE: &str = "tracker.snapshot";
+pub const EXECUTABLE_FILE: &str = "executables.path";
+
+pub fn db_path() -> PathBuf {
+    dirs::home_dir()
+        .expect("Cannot determine home directory")
+        .join(".local/share/hypr_restore")
+        .join(DB_FILE)
+}
+
+pub fn ignore_path() -> PathBuf {
+    dirs::home_dir()
+        .expect("Cannot determine home directory")
+        .join(".local/share/hypr_restore")
+        .join(IGNORE_FILE)
+}
+
+pub fn snapshot_path() -> PathBuf {
+    dirs::home_dir()
+        .expect("Cannot determine home directory")
+        .join(".local/share/hypr_restore")
+        .join(SNAPSHOT_FILE)
+}
+
+pub fn executables_path() -> PathBuf {
+    dirs::home_dir()
+        .expect("Cannot determine home directory")
+        .join(".local/share/hypr_restore")
+        .join(EXECUTABLE_FILE)
+}
 
 pub fn get_pid(address: &str) -> i64 {
     let pid: i64= 0;

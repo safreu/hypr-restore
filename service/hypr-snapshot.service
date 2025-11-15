@@ -1,0 +1,10 @@
+[Unit]
+Description=Snapshots the DB of hypr-listener
+
+[Service]
+ExecStart=%h/.local/bin/hypr_restore/snapshot
+Restart=on-failure
+Type=oneshot
+
+[Install]
+WantedBy=default.target
