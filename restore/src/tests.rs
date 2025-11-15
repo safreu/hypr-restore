@@ -10,7 +10,7 @@ mod tests {
     fn new_path_tacker() {
         let dir = tempdir().unwrap();
         let executables_path = dir.path().join("executables.path");
-        let path_tracker = ExecutablesHandler::new(executables_path.to_str().unwrap());
+        let path_tracker = ExecutablesHandler::new(executables_path);
         assert!(path_tracker.table.is_empty());
     }
 
@@ -18,7 +18,7 @@ mod tests {
     fn init_path_tacker_with_empty_file() {
         let dir = tempdir().unwrap();
         let executables_path = dir.path().join("executables.path");
-        let mut path_tracker = ExecutablesHandler::new(executables_path.to_str().unwrap());
+        let mut path_tracker = ExecutablesHandler::new(executables_path.clone());
 
         path_tracker.init();
 
@@ -30,7 +30,7 @@ mod tests {
     fn init_path_tacker_with_not_empty_file() {
         let dir = tempdir().unwrap();
         let executables_path = dir.path().join("executables.path");
-        let mut path_tracker = ExecutablesHandler::new(executables_path.to_str().unwrap());
+        let mut path_tracker = ExecutablesHandler::new(executables_path.clone());
 
         {
             let mut file = File::create(&executables_path).expect("Failed to create executables file");
@@ -46,7 +46,7 @@ mod tests {
     fn insert_new_entry_with_existing_file() {
         let dir = tempdir().unwrap();
         let executables_path = dir.path().join("executables.path");
-        let mut path_tracker = ExecutablesHandler::new(executables_path.to_str().unwrap());
+        let mut path_tracker = ExecutablesHandler::new(executables_path.clone());
         {
             File::create(&executables_path).expect("Failed to create executables file");
         }
@@ -63,7 +63,7 @@ mod tests {
     fn insert_new_entry_with_not_existing_file() {
         let dir = tempdir().unwrap();
         let executables_path = dir.path().join("executables.path");
-        let mut path_tracker = ExecutablesHandler::new(executables_path.to_str().unwrap());
+        let mut path_tracker = ExecutablesHandler::new(executables_path);
 
         path_tracker.init();
         path_tracker.insert(String::from("test"), String::from("data")).expect("Failed to write");
@@ -77,7 +77,7 @@ mod tests {
     fn insert_changed_entry_with_existing_file() {
         let dir = tempdir().unwrap();
         let executables_path = dir.path().join("executables.path");
-        let mut path_tracker = ExecutablesHandler::new(executables_path.to_str().unwrap());
+        let mut path_tracker = ExecutablesHandler::new(executables_path);
 
         path_tracker.init();
         path_tracker.insert(String::from("test"), String::from("data")).expect("Failed to write");
@@ -91,7 +91,7 @@ mod tests {
     fn insert_new_value_with_existing_file() {
         let dir = tempdir().unwrap();
         let executables_path = dir.path().join("executables.path");
-        let mut path_tracker = ExecutablesHandler::new(executables_path.to_str().unwrap());
+        let mut path_tracker = ExecutablesHandler::new(executables_path.clone());
 
         {
             File::create(&executables_path).expect("Failed to create executables file");
@@ -116,7 +116,7 @@ mod tests {
     fn insert_new_entry_with_existing_file_still_containing_other_entry() {
         let dir = tempdir().unwrap();
         let executables_path = dir.path().join("executables.path");
-        let mut path_tracker = ExecutablesHandler::new(executables_path.to_str().unwrap());
+        let mut path_tracker = ExecutablesHandler::new(executables_path.clone());
 
         {
             File::create(&executables_path).expect("Failed to create executables file");
@@ -138,7 +138,7 @@ mod tests {
     fn get_executable_entry_with_existing_file() {
         let dir = tempdir().unwrap();
         let executables_path = dir.path().join("executables.path");
-        let mut path_tracker = ExecutablesHandler::new(executables_path.to_str().unwrap());
+        let mut path_tracker = ExecutablesHandler::new(executables_path.clone());
 
         {
             File::create(&executables_path).expect("Failed to create executables file");

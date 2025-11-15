@@ -1,6 +1,7 @@
 use std::env;
 use std::io::BufReader;
 use std::os::unix::net::UnixStream;
+use log::info;
 
 pub struct InstanceHandler {
     reader: BufReader<UnixStream>,
@@ -27,7 +28,7 @@ impl InstanceHandler {
 
         let reader = BufReader::new(stream);
 
-        println!("Connected to Hyprland event socket, listening for events...");
+        info!("Connected to Hyprland event socket, listening for events...");
 
         Self { reader }
     }

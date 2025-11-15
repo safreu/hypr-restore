@@ -2,14 +2,16 @@ use std::collections::{HashMap, HashSet};
 use std::fs::{File, OpenOptions};
 use std::io;
 use std::io::{BufRead, BufReader, BufWriter, Write};
+use std::path::{PathBuf};
+use log::info;
 use crate::event_entry::EventEntry;
 
 pub struct FileHandler {
-    path: String,
+    path: PathBuf,
 }
 
 impl FileHandler {
-    pub fn new(path: String) -> Self {
+    pub fn new(path: PathBuf) -> Self {
         FileHandler { path }
     }
 
@@ -21,6 +23,7 @@ impl FileHandler {
             .expect("Could not open file");
         let mut writer = BufWriter::new(file);
         writeln!(writer, "{}", printable).expect("Failed to write to file");
+        info!("Wrote {} into {}", printable, self.path.display());
         writer.flush()
     }
 

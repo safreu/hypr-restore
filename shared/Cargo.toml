@@ -9,3 +9,5 @@ path = "src/lib.rs"
 [dependencies]
 regex = "1.12.2"
 serde_json = "1.0"
+dirs = "6.0.0"
+log = "0.4.28"

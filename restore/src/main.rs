@@ -1,21 +1,23 @@
 mod tests;
 mod executables_handler;
 
+use std::fs;
 use std::process::Command;
 use shared::event_entry::EventEntry;
 use shared::file_handler::FileHandler;
-use shared::{EXECUTABLE_PATH, SNAPSHOT_PATH};
 use crate::executables_handler::ExecutablesHandler;
 
-fn main() {
+fn main() -> std::io::Result<()> {
     open_window();
+    fs::remove_file(shared::snapshot_path())?;
+    Ok(())
 }
 
 fn open_window() {
-    let snapshot_handler: FileHandler = FileHandler::new(SNAPSHOT_PATH.to_string());
+    let snapshot_handler: FileHandler = FileHandler::new(shared::snapshot_path());
     let to_be_restored = snapshot_handler.read_file().expect("Could not read file");
 
-    let mut executables_handler = ExecutablesHandler::new(EXECUTABLE_PATH);
+    let mut executables_handler = ExecutablesHandler::new(shared::executables_path());
     executables_handler.init();
 
     for line in to_be_restored {
@@ -28,7 +30,6 @@ fn open_window() {
 }
 
 fn open_window_command(workspace: &str, to_be_opened: &str) {
-    println!("{}", to_be_opened);
     let _command = Command::new("hyprctl")
         .args(["dispatch", "exec", format!("[workspace {} silent] {}", workspace, to_be_opened).as_str()])
         .output()

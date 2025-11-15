@@ -1,4 +1,5 @@
 use std::collections::HashSet;
+use std::path::PathBuf;
 use shared::file_handler::FileHandler;
 use shared;
 pub struct IgnoredHandler {
@@ -6,8 +7,8 @@ pub struct IgnoredHandler {
 }
 
 impl IgnoredHandler {
-    pub fn new(path: &str) -> Self {
-        let reader = FileHandler::new(path.to_string());
+    pub fn new(path: PathBuf) -> Self {
+        let reader = FileHandler::new(path);
         let ignored_classes = match reader.read_file() {
             Ok(file) => file,
             Err(_) => panic!("Failed to read file"),

@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::{fs, io};
 use std::io::Error;
+use std::path::PathBuf;
 use shared::event_entry::EventEntry;
 use shared::file_handler::FileHandler;
 
@@ -12,9 +13,9 @@ pub struct ExecutablesHandler {
 
 impl ExecutablesHandler {
     /// Creates a new ExecutablesMap by instantiating the fileHandler and the table
-    pub fn new(path: &str) -> Self {
+    pub fn new(path: PathBuf) -> Self {
         Self {
-            file_handler: FileHandler::new(path.to_string()),
+            file_handler: FileHandler::new(path),
             table: HashMap::new()
         }
     }

@@ -13,3 +13,5 @@ path = "src/main.rs"
 [dependencies]
 shared = { path = "../shared" }
 restore = { path = "../restore" }
+tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
+log = "0.4.28"

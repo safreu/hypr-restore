@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use shared::event_entry::EventEntry;
 use shared::file_handler::FileHandler;
 
@@ -7,7 +8,7 @@ pub struct EventDb {
 }
 
 impl EventDb {
-    pub fn new(path: String) -> Self {
+    pub fn new(path: PathBuf) -> Self {
         EventDb {
             table: Vec::new(),
             file_handler: FileHandler::new(path)
