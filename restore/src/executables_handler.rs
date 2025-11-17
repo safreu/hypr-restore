@@ -23,7 +23,9 @@ impl ExecutablesHandler {
     /// # Warning
     /// **Must** be called **after** new()
     pub fn init(&mut self) {
-        let lines = self.file_handler.read_file().expect("Failed to read file");
+        let lines = self.file_handler
+            .read_file()
+            .expect(format!("No Executables in {}", self.file_handler.get_path().trim()).as_str());
         for line in lines {
             let split = EventEntry::split(&line);
             self.table.insert(split[0].clone(), split[1].clone());

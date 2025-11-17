@@ -10,7 +10,7 @@ const DB_FILE: &str = "tracker.db";
 const IGNORE_FILE: &str = "classes.ignore";
 const SNAPSHOT_FILE: &str = "tracker.snapshot";
 const EXECUTABLE_FILE: &str = "executables.path";
-const HYPR_RESTORE_PATH: &str = "local/share/hypr_restore";
+const HYPR_RESTORE_PATH: &str = ".local/share/hypr_restore";
 
 /// Returns the path to the DB File based on the home directory
 ///

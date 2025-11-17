@@ -99,4 +99,7 @@ impl FileHandler {
         };
         Ok(set)
     }
+
+    /// Returns the path as String
+    pub fn get_path(&self) -> String { self.path.to_string_lossy().to_string() }
 }

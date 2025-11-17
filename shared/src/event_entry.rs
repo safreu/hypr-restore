@@ -7,7 +7,7 @@ use regex::Regex;
 /// * `workspace` := The hyprland workspace
 /// * `class` := The hyprland class
 /// * `title` := The hyprland title
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct EventEntry {
     address: String,
     workspace: String,
@@ -94,4 +94,19 @@ impl EventEntry {
     /// Returns the workspace as &str
     pub fn workspace(&self) -> &str { self.workspace.as_str() }
 
+    /// Creates a new EventEntry with the previous data except for the new workspace
+    ///
+    /// # Arguments
+    /// * `workspace` := The workspace you want to override
+    ///
+    /// Returns
+    /// Self
+    pub fn set_workspace(&mut self, workspace: &str) -> Self{
+        Self {
+            address: self.address.clone(),
+            workspace: workspace.to_string(),
+            class: self.class.clone(),
+            title: self.title.clone(),
+        }
+    }
 }

@@ -12,6 +12,11 @@ pub struct InstanceHandler {
 
 
 impl InstanceHandler {
+
+    /// Constructs a new InstanceHandler
+    ///
+    /// # Returns
+    /// Self
     pub fn new() -> Self {
         let hypr_instance = match env::var("HYPRLAND_INSTANCE_SIGNATURE") {
             Ok(instance) => instance,
@@ -36,6 +41,8 @@ impl InstanceHandler {
 
         Self { reader }
     }
+
+    /// Returns the reader
     pub fn reader(self) -> BufReader<UnixStream> {
         self.reader
     }
