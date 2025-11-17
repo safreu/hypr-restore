@@ -1,3 +1,5 @@
+mod event_db_tests;
+
 use std::io;
 use std::path::PathBuf;
 use shared::event_entry::EventEntry;
@@ -33,7 +35,6 @@ impl EventDb {
         let printable = event.to_string();
         self.table.push(event);
         self.file_handler.write(printable.as_str()).expect("Error writing to file");
-
     }
 
     /// Removes an EventEntry from to EventDb
@@ -66,7 +67,6 @@ impl EventDb {
                 let _ = self.file_handler.remove_line(&mut self.table);
                 return Some(updated);
             }
-            return None;
         }
         None
     }

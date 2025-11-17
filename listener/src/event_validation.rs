@@ -1,3 +1,5 @@
+mod event_validation_tests;
+
 use std::path::{PathBuf};
 use restore::executables_handler::ExecutablesHandler;
 use shared::event_entry::EventEntry;
@@ -12,14 +14,14 @@ pub struct EventValidation {
 }
 
 impl EventValidation {
-    
+
     /// Constructs a new EventValidation
-    /// 
+    ///
     /// # Arguments
     /// * `db_path` := The path to the DB on which to perform the operations
     /// * `ignore_path` := The path to the file which describes what to ignore
     /// * `executables_path` := The path to the file which stores the paths to the executables
-    /// 
+    ///
     /// # Returns
     /// Self
     pub fn new(db_path: PathBuf, ignore_path: PathBuf, executables_path: PathBuf) -> Self {
@@ -33,10 +35,10 @@ impl EventValidation {
     }
 
     /// Tries to insert the given Event, based on the validations
-    /// 
+    ///
     /// # Arguments
     /// * `event` := The event to insert
-    /// 
+    ///
     /// # Returns
     /// If successfully an empty Result or the EventEntry
     pub fn try_insert(&mut self, event: EventEntry) -> Result<(), EventEntry> {
@@ -58,7 +60,7 @@ impl EventValidation {
     }
 
     /// Tries to remove an Event
-    /// 
+    ///
     /// # Arguments
     /// * `address` := The address you want to remove
     ///
@@ -72,14 +74,14 @@ impl EventValidation {
     }
 
     /// Tries to update the workspace of an Event
-    /// 
+    ///
     /// # Arguments
     /// * `address` := The address of the Event you want to update
     /// * `workspace` := The workspace to which you want to update
-    /// 
+    ///
     /// # Returns
     /// An Result containing the event if the operation was successfully, else an empty Result
-    pub fn try_update(&mut self, address: &str, workspace: &str) -> Result<EventEntry, ()> {
+    pub fn try_update_workspace(&mut self, address: &str, workspace: &str) -> Result<EventEntry, ()> {
         let mut modified_address = address.to_string();
         if !modified_address.starts_with("0x") { modified_address = format!("0x{}", address) }
         match self.db.update_workspace(&modified_address, workspace) {

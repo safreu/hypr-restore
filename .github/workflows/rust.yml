@@ -14,13 +14,29 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Rust
+      - name: Install llvm-tools & cargo-llvm-cov
         run: |
-          rustup update stable
+          rustup toolchain install stable
           rustup default stable
+          rustup component add llvm-tools-preview
+          cargo install cargo-llvm-cov
 
       - name: Build
         run: cargo build --workspace --verbose
 
-      - name: Test
-        run: cargo test --workspace --verbose
+      - name: Run Tests + Coverage
+        run: |
+          cargo llvm-cov --workspace --lcov --output-path lcov.info
+          cargo llvm-cov --workspace --html --output-path coverage_html
+
+      - name: Upload coverage to GitHub (HTML)
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: coverage_html/
+
+      - name: Upload LCOV coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: lcov.info
+          path: lcov.info

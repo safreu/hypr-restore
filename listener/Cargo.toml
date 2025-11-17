@@ -15,3 +15,4 @@ shared = { path = "../shared" }
 restore = { path = "../restore" }
 tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
 log = "0.4.28"
+tempfile = "3.23.0"

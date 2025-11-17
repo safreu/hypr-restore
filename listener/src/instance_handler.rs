@@ -1,3 +1,5 @@
+mod instance_handler_tests;
+
 use std::env;
 use std::io::BufReader;
 use std::os::unix::net::UnixStream;

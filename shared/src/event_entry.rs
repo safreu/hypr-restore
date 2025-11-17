@@ -1,3 +1,5 @@
+mod event_entry_tests;
+
 use std::sync::OnceLock;
 use regex::Regex;
 

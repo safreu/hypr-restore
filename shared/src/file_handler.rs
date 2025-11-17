@@ -1,3 +1,5 @@
+mod file_handler_tests;
+
 use std::collections::{HashMap, HashSet};
 use std::fs::{File, OpenOptions};
 use std::io;

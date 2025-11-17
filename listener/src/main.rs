@@ -2,7 +2,6 @@ mod instance_handler;
 mod event_db;
 mod ignored_handler;
 mod event_validation;
-
 use std::io::{BufRead};
 use tracing_subscriber::EnvFilter;
 use log::info;
@@ -33,7 +32,7 @@ fn main() -> std::io::Result<()> {
 
                 if line.contains("movewindowv2") {
                     info!("Moved Window: {}", line);
-                    let _ = event_validator.try_update(&parts[1], &parts[2]);
+                    let _ = event_validator.try_update_workspace(&parts[1], &parts[2]);
                 }
 
                 if line.contains("closewindow") {
