@@ -6,39 +6,64 @@ use serde_json::Value;
 
 pub mod event_entry;
 pub mod file_handler;
-pub const DB_FILE: &str = "tracker.db";
-pub const IGNORE_FILE: &str = "classes.ignore";
-pub const SNAPSHOT_FILE: &str = "tracker.snapshot";
-pub const EXECUTABLE_FILE: &str = "executables.path";
+const DB_FILE: &str = "tracker.db";
+const IGNORE_FILE: &str = "classes.ignore";
+const SNAPSHOT_FILE: &str = "tracker.snapshot";
+const EXECUTABLE_FILE: &str = "executables.path";
+const HYPR_RESTORE_PATH: &str = "local/share/hypr_restore";
 
+/// Returns the path to the DB File based on the home directory
+///
+/// # Returns
+/// PathBuf
 pub fn db_path() -> PathBuf {
     dirs::home_dir()
         .expect("Cannot determine home directory")
-        .join(".local/share/hypr_restore")
+        .join(HYPR_RESTORE_PATH)
         .join(DB_FILE)
 }
 
+/// Returns the path to the Ignore File based on the home directory
+///
+/// # Returns
+/// PathBuf
 pub fn ignore_path() -> PathBuf {
     dirs::home_dir()
         .expect("Cannot determine home directory")
-        .join(".local/share/hypr_restore")
+        .join(HYPR_RESTORE_PATH)
         .join(IGNORE_FILE)
 }
 
+/// Returns the path to the Snapshot File based on the home directory
+///
+/// # Returns
+/// PathBuf
 pub fn snapshot_path() -> PathBuf {
     dirs::home_dir()
         .expect("Cannot determine home directory")
-        .join(".local/share/hypr_restore")
+        .join(HYPR_RESTORE_PATH)
         .join(SNAPSHOT_FILE)
 }
 
+/// Returns the path to the Executables File based on the home directory
+///
+/// # Returns
+/// PathBuf
 pub fn executables_path() -> PathBuf {
     dirs::home_dir()
         .expect("Cannot determine home directory")
-        .join(".local/share/hypr_restore")
+        .join(HYPR_RESTORE_PATH)
         .join(EXECUTABLE_FILE)
 }
 
+/// Gets the Pid of the window process based on the hyprland address
+///
+/// # Arguments
+///
+/// `address` := the hyprland address, can be obtained via the open window event
+///
+/// # Returns
+/// The PID
 pub fn get_pid(address: &str) -> i64 {
     let pid: i64= 0;
     let output = Command::new("hyprctl")

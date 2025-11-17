@@ -13,6 +13,7 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
+/// Opens the Windows based on the content of the Snapshot
 fn open_window() {
     let snapshot_handler: FileHandler = FileHandler::new(shared::snapshot_path());
     let to_be_restored = snapshot_handler.read_file().expect("Could not read file");

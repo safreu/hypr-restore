@@ -3,9 +3,13 @@ use std::io::BufReader;
 use std::os::unix::net::UnixStream;
 use log::info;
 
+/// Handles the hyprland instance, connects to socket and reads the events
+///
+/// * `reader` := The open connection to the socket
 pub struct InstanceHandler {
     reader: BufReader<UnixStream>,
 }
+
 
 impl InstanceHandler {
     pub fn new() -> Self {
