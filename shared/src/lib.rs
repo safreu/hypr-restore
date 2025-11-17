@@ -65,6 +65,10 @@ pub fn executables_path() -> PathBuf {
 /// # Returns
 /// The PID
 pub fn get_pid(address: &str) -> i64 {
+    if std::env::var("TEST_NO_HYPRCTL").is_ok() {
+        return 0;
+    }
+
     let pid: i64= 0;
     let output = Command::new("hyprctl")
         .args(["clients", "-j"])
