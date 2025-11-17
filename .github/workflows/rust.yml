@@ -2,7 +2,10 @@ name: Build, Test, and Analyze (Rust)
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - '**'
+
   pull_request:
 
 jobs:
