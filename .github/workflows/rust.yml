@@ -31,7 +31,7 @@ jobs:
         run: cargo build --workspace --verbose
 
       - name: Run Tests + Coverage
-      - run: |
+        run: |
           cargo llvm-cov --workspace --lcov --output-path coverage/lcov.info
           
           cargo llvm-cov --workspace --html
