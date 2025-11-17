@@ -31,9 +31,10 @@ jobs:
         run: cargo build --workspace --verbose
 
       - name: Run Tests + Coverage
-        run: |
-          cargo llvm-cov --workspace --lcov --output-path lcov.info
-          cargo llvm-cov --workspace --html --output-path coverage_html
+      - run: |
+          cargo llvm-cov --workspace --lcov --output-path coverage/lcov.info
+          
+          cargo llvm-cov --workspace --html
 
       - name: Upload coverage to GitHub (HTML)
         uses: actions/upload-artifact@v4
