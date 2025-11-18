@@ -1,3 +1,6 @@
+mod event_db_tests;
+
+use std::io;
 use std::path::PathBuf;
 use shared::event_entry::EventEntry;
 use shared::file_handler::FileHandler;
@@ -20,7 +23,7 @@ impl EventDb {
     pub fn new(path: PathBuf) -> Self {
         EventDb {
             table: Vec::new(),
-            file_handler: FileHandler::new(path)
+            file_handler: FileHandler::new(path),
         }
     }
 
@@ -32,17 +35,41 @@ impl EventDb {
         let printable = event.to_string();
         self.table.push(event);
         self.file_handler.write(printable.as_str()).expect("Error writing to file");
-
     }
 
     /// Removes an EventEntry from to EventDb
-    pub fn remove(&mut self, address: &str) -> std::io::Result<()> {
+    ///
+    /// # Arguments
+    /// * `address` := The address by which the entry should be removed
+    ///
+    /// # Returns
+    /// io::Result
+    pub fn remove(&mut self, address: &str) -> io::Result<()> {
         if let Some(index) = self.get_index(address) {
             self.table.remove(index);
         }
         self.file_handler.remove_line(&mut self.table)
     }
 
+    /// Updated the workspace of an entry, identified by the address
+    ///
+    /// # Arguments
+    /// * `address` := The address of the application
+    /// * `workspace` := The workspace the application moved to
+    ///
+    /// # Returns
+    /// An Option based on if the Operation was a success
+    pub fn update_workspace(&mut self, address: &str, workspace: &str) -> Option<EventEntry> {
+        if let Some(index) = self.get_index(address) {
+            if let Some(to_be_updated) = self.table.get_mut(index) {
+                let updated = to_be_updated.set_workspace(workspace);
+                self.table[index] = updated.clone();
+                let _ = self.file_handler.remove_line(&mut self.table);
+                return Some(updated);
+            }
+        }
+        None
+    }
 
     /// Gets the Index of an EventEntry by using the addres of the EvenEntry
     ///

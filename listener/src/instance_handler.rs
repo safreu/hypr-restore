@@ -1,3 +1,5 @@
+mod instance_handler_tests;
+
 use std::env;
 use std::io::BufReader;
 use std::os::unix::net::UnixStream;
@@ -12,6 +14,11 @@ pub struct InstanceHandler {
 
 
 impl InstanceHandler {
+
+    /// Constructs a new InstanceHandler
+    ///
+    /// # Returns
+    /// Self
     pub fn new() -> Self {
         let hypr_instance = match env::var("HYPRLAND_INSTANCE_SIGNATURE") {
             Ok(instance) => instance,
@@ -36,6 +43,8 @@ impl InstanceHandler {
 
         Self { reader }
     }
+
+    /// Returns the reader
     pub fn reader(self) -> BufReader<UnixStream> {
         self.reader
     }

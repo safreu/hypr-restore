@@ -1,3 +1,5 @@
+mod file_handler_tests;
+
 use std::collections::{HashMap, HashSet};
 use std::fs::{File, OpenOptions};
 use std::io;
@@ -99,4 +101,7 @@ impl FileHandler {
         };
         Ok(set)
     }
+
+    /// Returns the path as String
+    pub fn get_path(&self) -> String { self.path.to_string_lossy().to_string() }
 }

@@ -2,25 +2,50 @@ name: Build, Test, and Analyze (Rust)
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
   pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      TEST_NO_HYPRCTL: "1"
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up Rust
+      - name: Install llvm-tools & cargo-llvm-cov
         run: |
-          rustup update stable
+          rustup toolchain install stable
           rustup default stable
+          rustup component add llvm-tools-preview
+          cargo install cargo-llvm-cov
 
       - name: Build
         run: cargo build --workspace --verbose
 
-      - name: Test
-        run: cargo test --workspace --verbose
+      - name: Prepare coverage directory
+        run: mkdir -p coverage
+
+      - name: Run Tests + Coverage
+        run: |
+          cargo llvm-cov --workspace --lcov --output-path coverage/lcov.info
+          
+          cargo llvm-cov --workspace --html
+
+      - name: Upload coverage HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: target/llvm-cov/html/
+
+      - name: Upload LCOV coverage
+        uses: actions/upload-artifact@v4
+        with:
+            name: lcov
+            path: coverage/lcov.info
