@@ -1,0 +1,19 @@
+[package]
+name = "hypr-restore"
+version = "0.1.0"
+edition = "2024"
+include = [
+    "../service/*.service"
+]
+
+[[bin]]
+name = "hypr-restore"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.5.52", features = ["derive"] }
+restore = { path = "../restore" }
+listener = { path = "../listener" }
+snapshot = { path = "../snapshot" }
+dirs = "6.0.0"
+colored = "3"
