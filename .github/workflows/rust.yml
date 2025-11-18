@@ -39,14 +39,14 @@ jobs:
           
           cargo llvm-cov --workspace --html
 
-      - name: Upload coverage to GitHub (HTML)
+      - name: Upload coverage HTML
         uses: actions/upload-artifact@v4
         with:
           name: coverage-html
-          path: coverage_html/
+          path: target/llvm-cov/html/
 
       - name: Upload LCOV coverage
         uses: actions/upload-artifact@v4
         with:
-          name: lcov.info
-          path: lcov.info
+            name: lcov
+            path: coverage/lcov.info
