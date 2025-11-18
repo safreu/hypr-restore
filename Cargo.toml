@@ -1,9 +1,11 @@
 [workspace]
 members = [
     "listener",
+    "manager",
     "restore",
     "shared",
     "snapshot",
     "tui",
 ]
 resolver = "3"
+default-members = ["manager"]

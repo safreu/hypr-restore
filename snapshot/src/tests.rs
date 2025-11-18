@@ -11,7 +11,7 @@ mod tests {
         let snapshot_path = dir.path().join("test.snapshot");
 
         File::create(&db_path).unwrap();
-        let _ = snapshot::create_snapshot(&db_path, &snapshot_path, true);
+        let _ = crate::create_snapshot(&db_path, &snapshot_path, true);
 
         assert_eq!(snapshot_path.exists(), true);
     }
@@ -23,7 +23,7 @@ mod tests {
         let snapshot_path = dir.path().join("test.snapshot");
 
         File::create(&db_path).unwrap();
-        let _ = snapshot::create_snapshot(&db_path, &snapshot_path, true);
+        let _ = crate::create_snapshot(&db_path, &snapshot_path, true);
 
         assert_eq!(db_path.exists(), false);
     }
@@ -34,7 +34,7 @@ mod tests {
         let db_path = dir.path().join("not existing");
         let snapshot_path = dir.path().join("test.snapshot");
 
-        let _ = snapshot::create_snapshot(&db_path, &snapshot_path, true);
+        let _ = crate::create_snapshot(&db_path, &snapshot_path, true);
 
         assert_eq!(db_path.exists(), false);
         assert_eq!(snapshot_path.exists(), false);
@@ -51,7 +51,7 @@ mod tests {
             writeln!(file, "test data").expect("Failed to write to db");
         }
 
-        let _ = snapshot::create_snapshot(&db_path, &snapshot_path, true);
+        let _ = crate::create_snapshot(&db_path, &snapshot_path, true);
 
         let mut contents = String::new();
         File::open(&snapshot_path)

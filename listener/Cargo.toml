@@ -6,10 +6,6 @@ edition = "2024"
 [lib]
 path = "src/lib.rs"
 
-[[bin]]
-name = "listener"
-path = "src/main.rs"
-
 [dependencies]
 shared = { path = "../shared" }
 restore = { path = "../restore" }
