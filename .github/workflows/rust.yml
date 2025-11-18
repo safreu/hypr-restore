@@ -30,6 +30,9 @@ jobs:
       - name: Build
         run: cargo build --workspace --verbose
 
+      - name: Prepare coverage directory
+        run: mkdir -p coverage
+
       - name: Run Tests + Coverage
         run: |
           cargo llvm-cov --workspace --lcov --output-path coverage/lcov.info
