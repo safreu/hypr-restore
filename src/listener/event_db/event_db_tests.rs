@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod event_db_tests {
     use tempfile::tempdir;
-    use shared::event_entry::EventEntry;
-    use crate::event_db::EventDb;
+    use crate::listener::event_db::EventDb;
+    use crate::shared::event_entry::EventEntry;
 
     #[test]
     fn construct_new_event_db() {

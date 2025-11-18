@@ -2,9 +2,8 @@
 mod tests {
     use std::io::Write;
     use std::fs::File;
-    use crate::ExecutablesHandler;
     use tempfile::tempdir;
-
+    use crate::restore::executables_handler::ExecutablesHandler;
 
     #[test]
     fn new_path_tacker() {

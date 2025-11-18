@@ -2,8 +2,8 @@ use std::collections::HashMap;
 use std::{fs, io};
 use std::io::Error;
 use std::path::PathBuf;
-use shared::event_entry::EventEntry;
-use shared::file_handler::FileHandler;
+use crate::shared::event_entry::EventEntry;
+use crate::shared::file_handler::FileHandler;
 
 /// Contains the table which saves class \[KEY] and path \[VALUE] and the fileHandler to write them to in shared specified path
 pub struct ExecutablesHandler {
@@ -57,7 +57,7 @@ impl ExecutablesHandler {
     /// the Path to execute the application
     #[allow(dead_code)]
     pub fn get_executable_path_from_env(address: &str) -> Result<String, Error> {
-        let pid = shared::get_pid(address);
+        let pid = crate::shared::get_pid(address);
         let path = fs::read_link(format!("/proc/{}/exe", pid))?;
         Ok(path.to_string_lossy().into_owned())
     }

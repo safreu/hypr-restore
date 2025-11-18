@@ -1,10 +1,10 @@
 mod event_validation_tests;
 
 use std::path::{PathBuf};
-use restore::executables_handler::ExecutablesHandler;
-use shared::event_entry::EventEntry;
-use crate::event_db::EventDb;
-use crate::ignored_handler::IgnoredHandler;
+use crate::listener::event_db::EventDb;
+use crate::listener::ignored_handler::IgnoredHandler;
+use crate::restore::executables_handler::ExecutablesHandler;
+use crate::shared::event_entry::EventEntry;
 
 /// The EventValidation validates events and based on the validation performs operations on the DB
 pub struct EventValidation {

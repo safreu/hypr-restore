@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod event_validation_tests {
     use tempfile::tempdir;
-    use shared::event_entry::EventEntry;
-    use crate::event_validation::EventValidation;
+    use crate::listener::event_validation::EventValidation;
+    use crate::shared::event_entry::EventEntry;
 
     #[test]
     fn construct_event_validation() {

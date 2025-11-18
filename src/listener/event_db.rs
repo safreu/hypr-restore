@@ -2,8 +2,8 @@ mod event_db_tests;
 
 use std::io;
 use std::path::PathBuf;
-use shared::event_entry::EventEntry;
-use shared::file_handler::FileHandler;
+use crate::shared::event_entry::EventEntry;
+use crate::shared::file_handler::FileHandler;
 
 /// An EventDB used to store the open window Events
 pub struct EventDb {

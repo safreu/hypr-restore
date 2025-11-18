@@ -2,10 +2,10 @@ use std::io;
 use std::io::{BufRead};
 use tracing_subscriber::EnvFilter;
 use log::info;
-use shared::event_entry::EventEntry;
-use shared::executables_path;
-use crate::instance_handler::InstanceHandler;
-use crate::event_validation::EventValidation;
+use crate::listener::event_validation::EventValidation;
+use crate::listener::instance_handler::InstanceHandler;
+use crate::shared;
+use crate::shared::event_entry::EventEntry;
 
 pub mod instance_handler;
 pub mod event_db;
@@ -21,7 +21,7 @@ pub fn execute() -> io::Result<()> {
         .init();
 
     let instance = InstanceHandler::new();
-    let mut event_validator = EventValidation::new(shared::db_path(), shared::ignore_path(), executables_path());
+    let mut event_validator = EventValidation::new(shared::db_path(), shared::ignore_path(), shared::executables_path());
 
     for line in instance.reader().lines() {
         match line {

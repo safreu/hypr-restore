@@ -1,8 +1,9 @@
 use std::fs;
 use std::process::Command;
-use shared::event_entry::EventEntry;
-use shared::file_handler::FileHandler;
-use crate::executables_handler::ExecutablesHandler;
+use crate::restore::executables_handler::ExecutablesHandler;
+use crate::shared;
+use crate::shared::event_entry::EventEntry;
+use crate::shared::file_handler::FileHandler;
 
 mod tests;
 pub mod executables_handler;

@@ -2,8 +2,8 @@ mod ignored_handler_tests;
 
 use std::collections::HashSet;
 use std::path::PathBuf;
-use shared::file_handler::FileHandler;
-use shared;
+use crate::shared;
+use crate::shared::file_handler::FileHandler;
 
 /// The IgnoredHandler evaluates given Elements and decides if they should be skipped
 pub struct IgnoredHandler {

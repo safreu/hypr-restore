@@ -2,7 +2,7 @@
 mod ignored_handler_tests {
     use std::fs;
     use tempfile::tempdir;
-    use crate::ignored_handler::IgnoredHandler;
+    use crate::listener::ignored_handler::IgnoredHandler;
 
     #[test]
     fn construct_with_empty_file() {

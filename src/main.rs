@@ -1,6 +1,10 @@
 mod install;
 mod update;
 mod uninstall;
+mod listener;
+mod restore;
+mod shared;
+mod snapshot;
 
 use std::path::{PathBuf};
 use clap::{Parser, Subcommand};

@@ -6,7 +6,7 @@ use std::io;
 use std::io::{BufRead, BufReader, BufWriter, Write};
 use std::path::{PathBuf};
 use log::info;
-use crate::event_entry::EventEntry;
+use crate::shared::event_entry::EventEntry;
 
 /// The FileHandler handles writing and reading operations on a specified file
 ///
