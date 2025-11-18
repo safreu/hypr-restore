@@ -2,9 +2,13 @@
 name = "hypr-restore"
 version = "0.1.0"
 edition = "2024"
-include = [
-    "../service/*.service"
-]
+authors = ["Samuel Freundel"]
+license = "MIT"
+repository = "https://github.com/safreu/hypr-restore"
+description = "A tool to restore opened applications for hyprland"
+keywords = ["hyprland", "backup", "restore", "event-listener", "tracker"]
+categories = ["command-line-utilities"]
+readme = "../readme.md"
 
 [[bin]]
 name = "hypr-restore"
