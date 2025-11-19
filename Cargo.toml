@@ -10,7 +10,12 @@ keywords = ["hyprland", "backup", "restore", "event-listener", "tracker"]
 categories = ["command-line-utilities"]
 readme = "./readme.md"
 exclude = [
-    ".idea/"
+    ".idea/",
+    ".github/",
+    ".cargo_vcs_info.json",
+    "Cargo.toml.orig",
+    ".gitignore",
+    "Cargo.lock"
 ]
 
 [[bin]]
