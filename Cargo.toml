@@ -1,6 +1,6 @@
 [package]
 name = "hypr-restore"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = ["Samuel Freundel"]
 license = "MIT"
@@ -9,6 +9,9 @@ description = "A tool to restore opened applications for hyprland"
 keywords = ["hyprland", "backup", "restore", "event-listener", "tracker"]
 categories = ["command-line-utilities"]
 readme = "./readme.md"
+exclude = [
+    ".idea/"
+]
 
 [[bin]]
 name = "hypr-restore"
