@@ -5,7 +5,7 @@ use crate::shared;
 use crate::shared::event_entry::EventEntry;
 use crate::shared::file_handler::FileHandler;
 
-mod tests;
+mod restore_tests;
 pub mod executables_handler;
 
 /// Opens the Windows based on the content of the Snapshot

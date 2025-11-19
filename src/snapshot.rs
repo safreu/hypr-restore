@@ -2,7 +2,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use crate::shared;
 
-mod tests;
+mod snapshot_tests;
 
 pub fn execute() -> std::io::Result<()> {
     create_snapshot(&shared::db_path(), &shared::snapshot_path(), true)

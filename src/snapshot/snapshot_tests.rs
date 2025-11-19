@@ -1,5 +1,5 @@
 #[cfg(test)]
-mod tests {
+mod snapshot_tests {
     use std::io::{Read, Write};
     use std::fs::File;
     use tempfile::tempdir;

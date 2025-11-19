@@ -1,5 +1,5 @@
 #[cfg(test)]
-mod tests {
+mod restore_tests {
     use std::io::Write;
     use std::fs::File;
     use tempfile::tempdir;

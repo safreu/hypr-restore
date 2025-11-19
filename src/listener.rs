@@ -12,7 +12,6 @@ pub mod event_db;
 pub mod ignored_handler;
 mod event_validation;
 
-
 pub fn execute() -> io::Result<()> {
     tracing_subscriber::fmt()
         .with_env_filter(EnvFilter::from_default_env())
