@@ -5,6 +5,7 @@ mod listener;
 mod restore;
 mod shared;
 mod snapshot;
+mod lib;
 
 use std::path::{PathBuf};
 use clap::{Parser, Subcommand};
