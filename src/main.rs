@@ -1,15 +1,16 @@
 mod install;
-mod update;
-mod uninstall;
+mod lib;
 mod listener;
 mod restore;
 mod shared;
 mod snapshot;
-mod lib;
+mod tui;
+mod uninstall;
+mod update;
 
-use std::path::{PathBuf};
+use crate::Commands::{Install, Listen, Snapshot, Tui, Uninstall, Update};
 use clap::{Parser, Subcommand};
-use crate::Commands::{Tui, Snapshot, Listen, Install, Uninstall, Update};
+use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(name = "hypr-restore")]
@@ -40,7 +41,7 @@ fn main() {
 
     match cli.command {
         None => restore::open_window().expect("Failed to execute Restore"),
-        Some(Tui) => todo!(),
+        Some(Tui) => tui::execute().expect("Failed to execute TUI"),
         Some(Listen) => listener::execute().expect("Failed to listen"),
         Some(Snapshot) => snapshot::execute().expect("Failed to execute snapshot"),
         Some(Install) => install::execute(),
