@@ -1,0 +1,49 @@
+use std::io;
+use std::io::{BufRead};
+use tracing_subscriber::EnvFilter;
+use log::info;
+use crate::listener::event_validation::EventValidation;
+use crate::listener::instance_handler::InstanceHandler;
+use crate::shared;
+use crate::shared::event_entry::EventEntry;
+
+pub mod instance_handler;
+pub mod event_db;
+pub mod ignored_handler;
+mod event_validation;
+
+pub fn execute() -> io::Result<()> {
+    tracing_subscriber::fmt()
+        .with_env_filter(EnvFilter::from_default_env())
+        .with_target(false)
+        .with_level(true)
+        .init();
+
+    let instance = InstanceHandler::new();
+    let mut event_validator = EventValidation::new(shared::db_path(), shared::ignore_path(), shared::executables_path());
+
+    for line in instance.reader().lines() {
+        match line {
+            Ok(line) => {
+                let parts = EventEntry::split(&line);
+                if line.contains("openwindow") {
+                    info!("Opened Window: {}", line);
+                    let event: EventEntry = EventEntry::new(&parts);
+                    let _ = event_validator.try_insert(event);
+                }
+
+                if line.contains("movewindowv2") {
+                    info!("Moved Window: {}", line);
+                    let _ = event_validator.try_update_workspace(&parts[1], &parts[2]);
+                }
+
+                if line.contains("closewindow") {
+                    info!("Closed Window: {}", line);
+                    let _ = event_validator.try_remove(&parts[1]);
+                }
+            }
+            Err(_) => continue,
+        }
+    }
+    Ok(())
+}
