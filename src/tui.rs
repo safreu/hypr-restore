@@ -1,23 +1,29 @@
-mod command_popup;
+mod popup;
 mod file_content_provider;
 mod input_handler;
-
-use command_popup::*;
-use file_content_provider::*;
-use input_handler::*;
+mod navigation_bar;
+mod tab;
+mod window;
 
 use crossterm::event::{self, Event, KeyEventKind};
+use file_content_provider::*;
+use input_handler::*;
+use navigation_bar::draw_navigation_bar;
 use ratatui::layout::{Constraint, Direction, Layout};
 use ratatui::style::{Color, Modifier, Style, Stylize};
 use ratatui::text::Span;
-use ratatui::widgets::{Borders, Clear};
+use ratatui::text::{Line};
+use ratatui::widgets::{Borders};
 use ratatui::{
     DefaultTerminal, Frame,
-    layout::Rect,
-    text::Line,
-    widgets::{Block, Paragraph},
+    widgets::{Block},
 };
+
 use std::io;
+use tab::Tab;
+
+use crate::tui::tab::TabState;
+use crate::tui::window::draw_windows;
 
 pub fn execute() -> io::Result<()> {
     let mut terminal = ratatui::init();
@@ -26,28 +32,18 @@ pub fn execute() -> io::Result<()> {
     app_result
 }
 
-#[derive(Debug, Default, Eq, PartialEq)]
-enum Focused {
-    #[default]
-    TopLeft,
-    TopRight,
-    Bottom,
-    PopUp,
-}
-
 #[derive(Debug, Default)]
 pub struct App {
-    focused: Focused,
-    popup: CommandPopUpState,
-    content_provider: FileContentProviderState,
+    tab_state: TabState,
+    content_provider: FileContentProvider,
     exit: bool,
     show_popup: bool,
 }
 
 impl App {
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> io::Result<()> {
-        self.popup = CommandPopUpState::new(vec!["snapshot".to_string(), "restore".to_string()]);
-        self.content_provider = FileContentProviderState::new(vec![
+        self.tab_state = TabState::new();
+        self.content_provider = FileContentProvider::new(vec![
             "DB Content".to_string(),
             "Snapshot Content".to_string(),
             "Executables Content".to_string(),
@@ -64,69 +60,36 @@ impl App {
     fn ui(&mut self, frame: &mut Frame) {
         let area = frame.area();
 
-        let outer_layout = Layout::default()
-            .direction(Direction::Vertical)
-            .constraints(vec![Constraint::Percentage(50), Constraint::Percentage(50)])
-            .split(frame.area());
-
-        let inner_layout = Layout::default()
-            .direction(Direction::Horizontal)
-            .constraints(vec![Constraint::Percentage(25), Constraint::Percentage(75)])
-            .split(outer_layout[0]);
-
-        self.draw_left_upper(frame, inner_layout[0]);
-        self.draw_right_upper(frame, inner_layout[1]);
-        self.draw_bottom(frame, outer_layout[1]);
-        if self.show_popup {
-            self.popup.draw_popup(area, frame);
-        }
-    }
-
-    fn draw_left_upper(&mut self, frame: &mut Frame, rect: Rect) {
-        let lines = self.content_provider.provide_keys();
-        let block = match self.focused {
-            Focused::TopLeft => Block::new()
-                .borders(Borders::ALL)
-                .border_style(Style::default().fg(Color::Yellow)),
-            _ => Block::new().borders(Borders::ALL),
-        };
-        frame.render_widget(Paragraph::new(lines).block(block), rect);
-    }
-
-    fn draw_right_upper(&mut self, frame: &mut Frame, rect: Rect) {
-        let text = self.content_provider.provide_values();
-        let block = match self.focused {
-            Focused::TopRight => Block::new()
-                .borders(Borders::ALL)
-                .border_style(Style::default().fg(Color::Yellow)),
-            _ => Block::new().borders(Borders::ALL),
-        };
-        frame.render_widget(Paragraph::new(text).block(block), rect);
-    }
-
-    fn draw_bottom(&self, frame: &mut Frame, rect: Rect) {
         let instructions = Line::from(vec![
-            " Up/Down ".white().into(),
+            " Up/Down ".white(),
             "<Up>/<Down>".blue().bold(),
-            " Switch focus ".white().into(),
+            " Switch Tab ".white(),
             "<Tab>".blue().bold(),
-            " Commands ".white().into(),
+            " Commands ".white(),
             "<R>".blue().bold(),
-            " Quit ".white().into(),
+            " Quit ".white(),
             "<Q>".blue().bold(),
         ]);
 
-        frame.render_widget(Clear, rect);
-        let block = match self.focused {
-            Focused::Bottom => Block::new()
-                .borders(Borders::ALL)
-                .border_style(Style::default().fg(Color::Yellow))
-                .title_bottom(instructions.centered()),
-            _ => Block::new()
-                .borders(Borders::ALL)
-                .title_bottom(instructions.centered()),
+        let screen = Block::new()
+            .borders(Borders::NONE)
+            .title_bottom(instructions.centered());
+
+        let split_screen = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints(vec![Constraint::Percentage(7), Constraint::Percentage(93)])
+            .split(area);
+
+        let [navigation_layout, content_layout] = &*split_screen else {
+            panic!("Cant create Layouts")
         };
-        frame.render_widget(Paragraph::new("outer 1").block(block), rect);
+
+        draw_navigation_bar(self, frame, *navigation_layout);
+        draw_windows(self, frame, *content_layout);
+        if self.show_popup {
+            self.tab_state.draw_popup(area, frame);
+        }
+        frame.render_widget(screen, area)
     }
 
     fn handle_events(&mut self) -> io::Result<()> {
@@ -143,12 +106,13 @@ impl App {
         self.exit = true;
     }
 }
-fn highlight_line(entry: &String) -> Line {
+
+fn highlight_line(entry: &str) -> Line {
     Line::from(Span::styled(
-        entry.clone(),
+        entry,
         Style::default()
-            .fg(Color::White)
+            .fg(Color::Black)
             .bg(Color::Blue)
-            .add_modifier(Modifier::BOLD | Modifier::SLOW_BLINK),
+            .add_modifier(Modifier::BOLD | Modifier::RAPID_BLINK),
     ))
 }

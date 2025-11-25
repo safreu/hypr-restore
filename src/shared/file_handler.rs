@@ -4,9 +4,9 @@ use crate::shared::event_entry::EventEntry;
 use log::info;
 use std::collections::{HashMap, HashSet};
 use std::fs::{File, OpenOptions};
+use std::io;
 use std::io::{BufRead, BufReader, BufWriter, Write};
 use std::path::PathBuf;
-use std::{io, thread};
 
 /// The FileHandler handles writing and reading operations on a specified file
 ///
@@ -123,4 +123,3 @@ impl FileHandler {
         self.path.to_string_lossy().to_string()
     }
 }
-

@@ -5,13 +5,13 @@ use ratatui::prelude::{Line, Span, Text};
 use std::collections::HashMap;
 
 #[derive(Debug, Default)]
-pub struct FileContentProviderState {
+pub struct FileContentProvider {
     content_list: Vec<String>,
     content_entries: HashMap<String, Vec<String>>,
     content_highlight: usize,
 }
 
-impl FileContentProviderState {
+impl FileContentProvider {
     pub fn new(content_list: Vec<String>) -> Self {
         Self {
             content_list,
@@ -45,7 +45,7 @@ impl FileContentProviderState {
         );
     }
 
-    pub fn provide_keys(&mut self) -> Vec<Line> {
+    pub fn provide_keys(&self) -> Vec<Line> {
         self.content_list
             .iter()
             .enumerate()
@@ -59,7 +59,7 @@ impl FileContentProviderState {
             .collect()
     }
 
-    pub fn provide_values(&mut self) -> Text {
+    pub fn provide_values(&self) -> Text {
         let selected_command = self.content_list[self.content_highlight].clone();
         let selected_entries = self.content_entries.get(&selected_command).unwrap();
         Text::from(selected_entries.join("\n"))
@@ -81,4 +81,3 @@ impl FileContentProviderState {
         }
     }
 }
-

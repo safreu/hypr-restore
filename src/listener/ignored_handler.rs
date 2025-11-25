@@ -1,9 +1,9 @@
 mod ignored_handler_tests;
 
-use std::collections::HashSet;
-use std::path::PathBuf;
 use crate::shared;
 use crate::shared::file_handler::FileHandler;
+use std::collections::HashSet;
+use std::path::PathBuf;
 
 /// The IgnoredHandler evaluates given Elements and decides if they should be skipped
 pub struct IgnoredHandler {
@@ -11,12 +11,11 @@ pub struct IgnoredHandler {
 }
 
 impl IgnoredHandler {
-    
     /// Constructs a new IgnoredHandler
-    /// 
+    ///
     /// # Arguments
     /// * `path` := The path to the file where classes which should be skipped are stored
-    /// 
+    ///
     /// # Returns
     /// Self
     pub fn new(path: PathBuf) -> Self {
@@ -29,32 +28,48 @@ impl IgnoredHandler {
     }
 
     /// Evaluates if an open window event should be skipped (not inserted to the DB)
-    /// 
+    ///
     /// # Arguments
     /// * `class` := The class of an open window event
     /// * `address` := The address of an open window event
-    /// 
+    ///
     /// # Returns
     /// True in case it should be skipped, else False
     pub fn should_ignore(&self, class: &str, address: &str) -> bool {
-        let ignore_flag = self.ignored_classes.iter().any(|ignore| class.to_lowercase().eq(ignore));
+        let ignore_flag = self
+            .ignored_classes
+            .iter()
+            .any(|ignore| class.to_lowercase().eq(ignore));
         let skip_flag = Self::should_skip(address);
-        if ignore_flag || skip_flag { true }
-        else { false }
+
+        println!("Ignore Flag: {} | Skip Flag: {}", ignore_flag, skip_flag);
+
+        if ignore_flag || skip_flag {
+            true
+        } else {
+            false
+        }
     }
 
     /// This Method evaluates if an application was started using the RESTORE_SKIP flag
-    /// 
+    ///
     /// # Arguments
     /// * `address` := The address of an open window event
-    /// 
+    ///
     /// # Returns
     /// True if the application was started with the RESTORE_SKIP flag, else False
-     fn should_skip(address: &str) -> bool {
-         let pid = shared::get_pid(address);
-         match shared::get_env_value("RESTORE_SKIP=", &pid) {
-             Ok(value) => if value == "1" { true } else { false },
-             Err(_) => false,
-         }
-     }
+    fn should_skip(address: &str) -> bool {
+        let pid = shared::get_pid(address);
+        match shared::get_env_value("RESTORE_SKIP=", &pid) {
+            Ok(value) => {
+                if value == "1" {
+                    true
+                } else {
+                    false
+                }
+            }
+            Err(_) => false,
+        }
+    }
 }
+
