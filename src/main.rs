@@ -1,3 +1,5 @@
+mod disable;
+mod enable;
 mod install;
 mod lib;
 mod listener;
@@ -8,13 +10,13 @@ mod tui;
 mod uninstall;
 mod update;
 
-use crate::Commands::{Install, Listen, Snapshot, Tui, Uninstall, Update};
+use crate::Commands::{Disable, Enable, Install, Listen, Snapshot, Tui, Uninstall, Update};
 use clap::{Parser, Subcommand};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 #[derive(Parser)]
 #[command(name = "hypr-restore")]
-#[command(about = "Installer for Hypr-restore")]
+#[command(about = "Installer for hypr-restore")]
 struct Cli {
     #[clap(subcommand)]
     command: Option<Commands>,
@@ -32,8 +34,12 @@ enum Commands {
     Listen,
     #[command(about = "Snapshot the DB manually")]
     Snapshot,
-    #[command(about = "open the tui")]
+    #[command(about = "Open the Tui")]
     Tui,
+    #[command(about = "Disable the listener")]
+    Disable,
+    #[command(about = "Enable the listener")]
+    Enable,
 }
 
 fn main() {
@@ -47,14 +53,16 @@ fn main() {
         Some(Install) => install::execute(),
         Some(Update) => update::execute(),
         Some(Uninstall) => uninstall::execute(),
+        Some(Disable) => disable::execute(),
+        Some(Enable) => enable::execute(),
     }
 }
 
-fn destination_share(home_dir: &PathBuf) -> PathBuf {
+fn destination_share(home_dir: &Path) -> PathBuf {
     home_dir.join(".local/share/hypr_restore")
 }
 
-fn systemd(home_dir: &PathBuf) -> PathBuf {
+fn systemd(home_dir: &Path) -> PathBuf {
     home_dir.join(".config/systemd/user")
 }
 
