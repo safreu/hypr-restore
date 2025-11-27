@@ -10,7 +10,7 @@ mod tests {
         let ignore_path = dir.path().join("classes.ignore");
         let ignored_handler = IgnoredHandler::new(ignore_path);
 
-        assert!(ignored_handler.ignored_classes.is_empty());
+        assert!(ignored_handler.unwrap().ignored_classes.is_empty());
     }
 
     #[test]
@@ -22,7 +22,7 @@ mod tests {
 
         let ignored_handler = IgnoredHandler::new(ignore_path.clone());
 
-        assert!(ignored_handler.ignored_classes.contains("content"));
+        assert!(ignored_handler.unwrap().ignored_classes.contains("content"));
         assert!(
             fs::read_to_string(&ignore_path)
                 .unwrap()
@@ -39,7 +39,7 @@ mod tests {
 
         let ignored_handler = IgnoredHandler::new(ignore_path.clone());
 
-        let result = ignored_handler.should_ignore("unskippable_class");
+        let result = ignored_handler.unwrap().should_ignore("unskippable_class");
 
         assert!(!result);
     }
@@ -53,7 +53,7 @@ mod tests {
 
         let ignored_handler = IgnoredHandler::new(ignore_path.clone());
 
-        let result = ignored_handler.should_ignore("skippable_class");
+        let result = ignored_handler.unwrap().should_ignore("skippable_class");
 
         assert!(result);
     }
