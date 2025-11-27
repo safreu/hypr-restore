@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod ignored_handler_tests {
+    use crate::listener::ignored_handler::IgnoredHandler;
     use std::fs;
     use tempfile::tempdir;
-    use crate::listener::ignored_handler::IgnoredHandler;
 
     #[test]
     fn construct_with_empty_file() {
@@ -23,7 +23,11 @@ mod ignored_handler_tests {
         let ignored_handler = IgnoredHandler::new(ignore_path.clone());
 
         assert!(ignored_handler.ignored_classes.contains("content"));
-        assert!(fs::read_to_string(&ignore_path).unwrap().contains("content"));
+        assert!(
+            fs::read_to_string(&ignore_path)
+                .unwrap()
+                .contains("content")
+        );
     }
 
     #[test]
@@ -35,7 +39,7 @@ mod ignored_handler_tests {
 
         let ignored_handler = IgnoredHandler::new(ignore_path.clone());
 
-        let result =ignored_handler.should_ignore("unskippable_class", "address");
+        let result = ignored_handler.should_ignore("unskippable_class");
 
         assert_eq!(result, false);
     }
@@ -49,7 +53,7 @@ mod ignored_handler_tests {
 
         let ignored_handler = IgnoredHandler::new(ignore_path.clone());
 
-        let result =ignored_handler.should_ignore("skippable_class", "address");
+        let result = ignored_handler.should_ignore("skippable_class");
 
         assert_eq!(result, true);
     }
@@ -57,3 +61,4 @@ mod ignored_handler_tests {
     //Not sure how I should implement the tests for should_skip
     //TODO: Implement the tests for should_skip()
 }
+

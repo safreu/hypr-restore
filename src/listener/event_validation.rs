@@ -42,14 +42,11 @@ impl EventValidation {
     /// If successfully an empty Result or the EventEntry
     pub fn try_insert(&mut self, event: EventEntry) -> Result<(), EventEntry> {
         println!("{}", event.to_string());
-        if self
-            .ignored_handler
-            .should_ignore(event.class(), event.address())
-        {
+        if self.ignored_handler.should_ignore(event.class()) {
             return Err(event);
         }
 
-        match ExecutablesHandler::get_executable_path_from_env(&event.address()) {
+        match ExecutablesHandler::get_executable_path_from_env(event.address()) {
             Ok(executable_path) => self
                 .executables_handler
                 .insert(event.class().to_string(), executable_path)
@@ -101,4 +98,3 @@ impl EventValidation {
         }
     }
 }
-
