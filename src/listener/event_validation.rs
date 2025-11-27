@@ -41,7 +41,6 @@ impl EventValidation {
     /// # Returns
     /// If successfully an empty Result else the EventEntry
     pub fn try_insert(&mut self, event: EventEntry) -> Result<(), EventEntry> {
-        println!("{}", event);
         if self.ignored_handler.should_ignore(event.class()) {
             return Err(event);
         }
