@@ -26,9 +26,11 @@ impl EventValidation {
     pub fn new(db_path: PathBuf, ignore_path: PathBuf, executables_path: PathBuf) -> Self {
         let mut executables_handler = ExecutablesHandler::new(executables_path);
         executables_handler.init();
+        let ignored_handler =
+            IgnoredHandler::new(ignore_path).expect("Failed to create the IngoredHandler");
         Self {
             db: EventDb::new(db_path),
-            ignored_handler: IgnoredHandler::new(ignore_path),
+            ignored_handler,
             executables_handler,
         }
     }
@@ -41,7 +43,6 @@ impl EventValidation {
     /// # Returns
     /// If successfully an empty Result else the EventEntry
     pub fn try_insert(&mut self, event: EventEntry) -> Result<(), EventEntry> {
-        println!("{}", event);
         if self.ignored_handler.should_ignore(event.class()) {
             return Err(event);
         }
