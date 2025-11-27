@@ -1,8 +1,8 @@
 #[cfg(test)]
-mod event_db_tests {
-    use tempfile::tempdir;
+mod tests {
     use crate::listener::event_db::EventDb;
     use crate::shared::event_entry::EventEntry;
+    use tempfile::tempdir;
 
     #[test]
     fn construct_new_event_db() {
@@ -19,15 +19,13 @@ mod event_db_tests {
         let db_path = dir.path().join("tracker.db");
         let mut event_db: EventDb = EventDb::new(db_path.clone());
 
-        let event = EventEntry::new(
-            &vec![
-                "open_event".to_string(),
-                "address".to_string(),
-                "workspace".to_string(),
-                "class".to_string(),
-                "title".to_string()
-            ]
-        );
+        let event = EventEntry::new(&[
+            "open_event".to_string(),
+            "address".to_string(),
+            "workspace".to_string(),
+            "class".to_string(),
+            "title".to_string(),
+        ]);
 
         event_db.insert(event.clone());
         let content = event_db.file_handler.read_file().unwrap();
@@ -42,22 +40,19 @@ mod event_db_tests {
         let db_path = dir.path().join("tracker.db");
         let mut event_db: EventDb = EventDb::new(db_path.clone());
 
-        let event = EventEntry::new(
-            &vec![
-                "open_event".to_string(),
-                "address".to_string(),
-                "workspace".to_string(),
-                "class".to_string(),
-                "title".to_string()
-            ]
-        );
+        let event = EventEntry::new(&[
+            "open_event".to_string(),
+            "address".to_string(),
+            "workspace".to_string(),
+            "class".to_string(),
+            "title".to_string(),
+        ]);
 
         event_db.insert(event.clone());
 
         let result = event_db.remove(event.address());
 
         let content = event_db.file_handler.read_file().unwrap();
-
 
         assert!(result.is_ok());
         assert!(!content.contains(event.to_string().as_str()));
@@ -70,15 +65,13 @@ mod event_db_tests {
         let db_path = dir.path().join("tracker.db");
         let mut event_db: EventDb = EventDb::new(db_path.clone());
 
-        let mut event = EventEntry::new(
-            &vec![
-                "open_event".to_string(),
-                "address".to_string(),
-                "workspace".to_string(),
-                "class".to_string(),
-                "title".to_string()
-            ]
-        );
+        let mut event = EventEntry::new(&[
+            "open_event".to_string(),
+            "address".to_string(),
+            "workspace".to_string(),
+            "class".to_string(),
+            "title".to_string(),
+        ]);
 
         event_db.insert(event.clone());
 
@@ -99,15 +92,13 @@ mod event_db_tests {
         let db_path = dir.path().join("tracker.db");
         let mut event_db: EventDb = EventDb::new(db_path.clone());
 
-        let event = EventEntry::new(
-            &vec![
-                "open_event".to_string(),
-                "address".to_string(),
-                "workspace".to_string(),
-                "class".to_string(),
-                "title".to_string()
-            ]
-        );
+        let event = EventEntry::new(&[
+            "open_event".to_string(),
+            "address".to_string(),
+            "workspace".to_string(),
+            "class".to_string(),
+            "title".to_string(),
+        ]);
 
         event_db.insert(event.clone());
 
@@ -126,15 +117,13 @@ mod event_db_tests {
         let db_path = dir.path().join("tracker.db");
         let mut event_db: EventDb = EventDb::new(db_path.clone());
 
-        let event = EventEntry::new(
-            &vec![
-                "open_event".to_string(),
-                "address".to_string(),
-                "workspace".to_string(),
-                "class".to_string(),
-                "title".to_string()
-            ]
-        );
+        let event = EventEntry::new(&[
+            "open_event".to_string(),
+            "address".to_string(),
+            "workspace".to_string(),
+            "class".to_string(),
+            "title".to_string(),
+        ]);
 
         event_db.insert(event.clone());
 
@@ -153,15 +142,13 @@ mod event_db_tests {
         let db_path = dir.path().join("tracker.db");
         let mut event_db: EventDb = EventDb::new(db_path.clone());
 
-        let event = EventEntry::new(
-            &vec![
-                "open_event".to_string(),
-                "address".to_string(),
-                "workspace".to_string(),
-                "class".to_string(),
-                "title".to_string()
-            ]
-        );
+        let event = EventEntry::new(&[
+            "open_event".to_string(),
+            "address".to_string(),
+            "workspace".to_string(),
+            "class".to_string(),
+            "title".to_string(),
+        ]);
 
         event_db.insert(event);
 
@@ -176,15 +163,13 @@ mod event_db_tests {
         let db_path = dir.path().join("tracker.db");
         let mut event_db: EventDb = EventDb::new(db_path.clone());
 
-        let event = EventEntry::new(
-            &vec![
-                "open_event".to_string(),
-                "address".to_string(),
-                "workspace".to_string(),
-                "class".to_string(),
-                "title".to_string()
-            ]
-        );
+        let event = EventEntry::new(&[
+            "open_event".to_string(),
+            "address".to_string(),
+            "workspace".to_string(),
+            "class".to_string(),
+            "title".to_string(),
+        ]);
 
         event_db.insert(event);
 

@@ -1,9 +1,9 @@
 #[cfg(test)]
-mod snapshot_tests {
-    use std::io::{Read, Write};
-    use std::fs::File;
-    use tempfile::tempdir;
+mod tests {
     use crate::snapshot::create_snapshot;
+    use std::fs::File;
+    use std::io::{Read, Write};
+    use tempfile::tempdir;
 
     #[test]
     fn create_snapshot_existing_path() {
@@ -14,7 +14,7 @@ mod snapshot_tests {
         File::create(&db_path).unwrap();
         let _ = create_snapshot(&db_path, &snapshot_path, true);
 
-        assert_eq!(snapshot_path.exists(), true);
+        assert!(snapshot_path.exists());
     }
 
     #[test]
@@ -26,7 +26,7 @@ mod snapshot_tests {
         File::create(&db_path).unwrap();
         let _ = create_snapshot(&db_path, &snapshot_path, true);
 
-        assert_eq!(db_path.exists(), false);
+        assert!(!db_path.exists());
     }
 
     #[test]
@@ -37,8 +37,8 @@ mod snapshot_tests {
 
         let _ = create_snapshot(&db_path, &snapshot_path, true);
 
-        assert_eq!(db_path.exists(), false);
-        assert_eq!(snapshot_path.exists(), false);
+        assert!(!db_path.exists());
+        assert!(!snapshot_path.exists());
     }
 
     #[test]
@@ -62,5 +62,4 @@ mod snapshot_tests {
 
         assert_eq!(contents.trim(), "test data");
     }
-
 }

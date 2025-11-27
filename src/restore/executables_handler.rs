@@ -1,14 +1,14 @@
-use std::collections::HashMap;
-use std::{fs, io};
-use std::io::Error;
-use std::path::PathBuf;
 use crate::shared::event_entry::EventEntry;
 use crate::shared::file_handler::FileHandler;
+use std::collections::HashMap;
+use std::io::Error;
+use std::path::PathBuf;
+use std::{fs, io};
 
 /// Contains the table which saves class \[KEY] and path \[VALUE] and the fileHandler to write them to in shared specified path
 pub struct ExecutablesHandler {
     pub(crate) file_handler: FileHandler,
-    pub(crate) table: HashMap<String, String>
+    pub(crate) table: HashMap<String, String>,
 }
 
 impl ExecutablesHandler {
@@ -16,16 +16,17 @@ impl ExecutablesHandler {
     pub fn new(path: PathBuf) -> Self {
         Self {
             file_handler: FileHandler::new(path),
-            table: HashMap::new()
+            table: HashMap::new(),
         }
     }
     /// Initializes the table inside of Executables, by reading the file which contains the paths and writing them into the table,
     /// # Warning
     /// **Must** be called **after** new()
     pub fn init(&mut self) {
-        let lines = self.file_handler
+        let lines = self
+            .file_handler
             .read_file()
-            .expect(format!("No Executables in {}", self.file_handler.get_path().trim()).as_str());
+            .unwrap_or_else(|_| panic!("No Executables in {}", self.file_handler.get_path()));
         for line in lines {
             let split = EventEntry::split(&line);
             self.table.insert(split[0].clone(), split[1].clone());
@@ -43,8 +44,11 @@ impl ExecutablesHandler {
     /// io::Result based on if the operation was successfully or not
     #[allow(dead_code)]
     pub fn insert(&mut self, class: String, executable_path: String) -> io::Result<()> {
-        if self.table.contains_key(&class) && self.table[&class] == executable_path { return Ok(()); }
-        else { self.table.insert(class.clone(), executable_path.clone()); }
+        if self.table.contains_key(&class) && self.table[&class] == executable_path {
+            return Ok(());
+        } else {
+            self.table.insert(class.clone(), executable_path.clone());
+        }
         self.file_handler.write_complete_hashmap(&self.table)
     }
 
@@ -55,9 +59,10 @@ impl ExecutablesHandler {
     ///
     /// # Returns
     /// the Path to execute the application
-    #[allow(dead_code)]
+    ///
+    //Fixme: Get the value not from exe but from cmdline to make sure its correct, e.g Applications like Obsidian (Electron) have the path to Electron as exe not their actual
     pub fn get_executable_path_from_env(address: &str) -> Result<String, Error> {
-        let pid = crate::shared::get_pid(address);
+        let pid = crate::shared::get_pid(address)?;
         let path = fs::read_link(format!("/proc/{}/exe", pid))?;
         Ok(path.to_string_lossy().into_owned())
     }
@@ -71,7 +76,7 @@ impl ExecutablesHandler {
     /// The Option of the entry
     pub fn get_executable_entry(&mut self, class: &str) -> Option<String> {
         if self.table.contains_key(class) {
-            return Some(self.table[class].to_string())
+            return Some(self.table[class].to_string());
         }
         None
     }

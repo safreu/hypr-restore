@@ -1,4 +1,3 @@
 #[cfg(test)]
-mod instance_handler_tests {
-    
-}
+mod tests {}
+

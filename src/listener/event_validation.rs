@@ -1,20 +1,19 @@
 mod event_validation_tests;
 
-use std::path::{PathBuf};
 use crate::listener::event_db::EventDb;
 use crate::listener::ignored_handler::IgnoredHandler;
 use crate::restore::executables_handler::ExecutablesHandler;
 use crate::shared::event_entry::EventEntry;
+use std::path::PathBuf;
 
 /// The EventValidation validates events and based on the validation performs operations on the DB
 pub struct EventValidation {
-    db : EventDb,
+    db: EventDb,
     ignored_handler: IgnoredHandler,
     executables_handler: ExecutablesHandler,
 }
 
 impl EventValidation {
-
     /// Constructs a new EventValidation
     ///
     /// # Arguments
@@ -40,21 +39,24 @@ impl EventValidation {
     /// * `event` := The event to insert
     ///
     /// # Returns
-    /// If successfully an empty Result or the EventEntry
+    /// If successfully an empty Result else the EventEntry
     pub fn try_insert(&mut self, event: EventEntry) -> Result<(), EventEntry> {
-        if self.ignored_handler.should_ignore(event.class(), event.address()) { return Err(event) }
-
-        match ExecutablesHandler::get_executable_path_from_env(&event.address()) {
-            Ok(executable_path) => self.executables_handler
-                .insert(
-                    event.class().to_string(),
-                    executable_path).expect("Failed to insert executable path"),
-            Err(_) => {self.executables_handler
-                .insert(
-                    event.class().to_string(),
-                    event.class().to_string()).expect("Failed to insert class");}
+        println!("{}", event);
+        if self.ignored_handler.should_ignore(event.class()) {
+            return Err(event);
         }
 
+        match ExecutablesHandler::get_executable_path_from_env(event.address()) {
+            Ok(executable_path) => self
+                .executables_handler
+                .insert(event.class().to_string(), executable_path)
+                .expect("Failed to insert executable path"),
+            Err(_) => {
+                self.executables_handler
+                    .insert(event.class().to_string(), event.class().to_string())
+                    .expect("Failed to insert class");
+            }
+        }
         self.db.insert(event);
         Ok(())
     }
@@ -65,11 +67,11 @@ impl EventValidation {
     /// * `address` := The address you want to remove
     ///
     /// # Returns
-    /// If successfully an empty Result or the address
+    /// If successfully an empty Result else the address
     pub fn try_remove(&mut self, address: &str) -> Result<(), String> {
         match self.db.remove(address) {
-            Ok(_) => {Ok(())}
-            Err(_) => {Err(address.to_string()) }
+            Ok(_) => Ok(()),
+            Err(_) => Err(address.to_string()),
         }
     }
 
@@ -81,12 +83,18 @@ impl EventValidation {
     ///
     /// # Returns
     /// An Result containing the event if the operation was successfully, else an empty Result
-    pub fn try_update_workspace(&mut self, address: &str, workspace: &str) -> Result<EventEntry, ()> {
+    pub fn try_update_workspace(
+        &mut self,
+        address: &str,
+        workspace: &str,
+    ) -> Result<EventEntry, ()> {
         let mut modified_address = address.to_string();
-        if !modified_address.starts_with("0x") { modified_address = format!("0x{}", address) }
+        if !modified_address.starts_with("0x") {
+            modified_address = format!("0x{}", address)
+        }
         match self.db.update_workspace(&modified_address, workspace) {
             Some(e) => Ok(e),
-            None => Err(())
+            None => Err(()),
         }
     }
 }

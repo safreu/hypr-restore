@@ -1,8 +1,8 @@
 mod event_entry_tests;
 
-use std::sync::OnceLock;
 use regex::Regex;
-
+use std::fmt;
+use std::sync::OnceLock;
 /// The EventEntry handles everything related to the contents of the open window event
 ///
 /// * `address` := The hyprland address
@@ -14,13 +14,12 @@ pub struct EventEntry {
     address: String,
     workspace: String,
     class: String,
-    title: String
-
+    title: String,
 }
 impl EventEntry {
     fn delimiter() -> &'static Regex {
         static DELIMITER: OnceLock<Regex> = OnceLock::new();
-        DELIMITER.get_or_init(|| {Regex::new(r",|>>").unwrap()})
+        DELIMITER.get_or_init(|| Regex::new(r",|>>").unwrap())
     }
 
     /// Splits the given String into a Vector\<String> by using , and/or >> as delimiter
@@ -30,7 +29,7 @@ impl EventEntry {
     ///
     /// # Returns
     /// A Vector of split elements as Strings
-     pub fn split(line: &String) -> Vec<String> {
+    pub fn split(line: &str) -> Vec<String> {
         Self::delimiter()
             .split(line)
             .map(|s| s.trim().to_string())
@@ -49,9 +48,11 @@ impl EventEntry {
     ///
     /// # Returns
     /// Self
-    pub fn new(event: &Vec<String>) -> Self {
+    pub fn new(event: &[String]) -> Self {
         let mut modified_address = event[1].clone();
-        if !event[1].starts_with("0x") { modified_address = format!("0x{}", event[1]); }
+        if !event[1].starts_with("0x") {
+            modified_address = format!("0x{}", event[1]);
+        }
         Self {
             address: modified_address,
             workspace: event[2].clone(),
@@ -71,9 +72,11 @@ impl EventEntry {
     ///
     /// # Returns
     /// Self
-    pub fn new_without_event_type(event: &Vec<String>) -> Self {
+    pub fn new_without_event_type(event: &[String]) -> Self {
         let mut modified_address = event[0].clone();
-        if !event[0].starts_with("0x") { modified_address = format!("0x{}", event[0]); }
+        if !event[0].starts_with("0x") {
+            modified_address = format!("0x{}", event[0]);
+        }
         Self {
             address: modified_address,
             workspace: event[1].clone(),
@@ -82,33 +85,45 @@ impl EventEntry {
         }
     }
 
-    /// Returns the content of the struct EventEntry, concatenated as String
-    pub fn to_string(&self) -> String {
-        format!("{},{},{},{}", self.address, self.workspace, self.class, self.title)
+    /// Returns the address as &str
+    pub fn address(&self) -> &str {
+        self.address.as_str()
     }
 
-    /// Returns the address as &str
-    pub fn address(&self) -> &str { self.address.as_str() }
-
     /// Returns the class as &str
-    pub fn class(&self) -> &str { self.class.as_str() }
+    pub fn class(&self) -> &str {
+        self.class.as_str()
+    }
 
     /// Returns the workspace as &str
-    pub fn workspace(&self) -> &str { self.workspace.as_str() }
+    pub fn workspace(&self) -> &str {
+        self.workspace.as_str()
+    }
 
     /// Creates a new EventEntry with the previous data except for the new workspace
     ///
     /// # Arguments
-    /// * `workspace` := The workspace you want to override
+    /// * `workspace` := The workspace you want to overwrite
     ///
     /// Returns
     /// Self
-    pub fn set_workspace(&mut self, workspace: &str) -> Self{
+    pub fn set_workspace(&mut self, workspace: &str) -> Self {
         Self {
             address: self.address.clone(),
             workspace: workspace.to_string(),
             class: self.class.clone(),
             title: self.title.clone(),
         }
+    }
+}
+
+impl fmt::Display for EventEntry {
+    /// Implements the to_string function for EventEntry
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{},{},{},{}",
+            self.address, self.workspace, self.class, self.title
+        )
     }
 }
