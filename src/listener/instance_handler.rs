@@ -1,9 +1,11 @@
 mod instance_handler_tests;
 
+use log::info;
 use std::env;
 use std::io::BufReader;
 use std::os::unix::net::UnixStream;
-use log::info;
+use std::thread::sleep;
+use std::time::Duration;
 
 /// Handles the hyprland instance, connects to socket and reads the events
 ///
@@ -12,23 +14,30 @@ pub struct InstanceHandler {
     reader: BufReader<UnixStream>,
 }
 
-
 impl InstanceHandler {
-
     /// Constructs a new InstanceHandler
     ///
     /// # Returns
     /// Self
     pub fn new() -> Self {
-        let hypr_instance = match env::var("HYPRLAND_INSTANCE_SIGNATURE") {
-            Ok(instance) => instance,
-            Err(_) => panic!("HYPRLAND_INSTANCE_SIGNATURE not defined"),
-        };
+        let mut counter = 0;
+        let mut hypr_instance: String = String::from("");
+        let mut runtime_dir: String = String::from("");
+        while (hypr_instance.is_empty() && runtime_dir.is_empty()) || counter >= 50 {
+            hypr_instance = env::var("HYPRLAND_INSTANCE_SIGNATURE").unwrap_or_default();
 
-        let runtime_dir = match env::var("XDG_RUNTIME_DIR") {
-            Ok(dir) => dir,
-            Err(_) => panic!("XDG_RUNTIME_DIR not defined"),
-        };
+            runtime_dir = env::var("XDG_RUNTIME_DIR").unwrap_or_default();
+
+            counter += 1;
+            sleep(Duration::from_secs(1));
+        }
+
+        if hypr_instance.is_empty() {
+            panic!("HYPRLAND_INSTANCE_SIGNATURE not defined")
+        }
+        if runtime_dir.is_empty() {
+            panic!("XDG_RUNTIME_DIR not defined")
+        }
 
         let socket_path = format!("{}/hypr/{}/.socket2.sock", runtime_dir, hypr_instance);
 
