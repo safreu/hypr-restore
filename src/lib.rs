@@ -69,5 +69,10 @@ fn systemd(home_dir: &Path) -> PathBuf {
     home_dir.join(".config/systemd/user")
 }
 
+/// Returns the config dir
+fn config_dir(home_dir: &Path) -> PathBuf {
+    home_dir.join(".config/hypr_restore")
+}
+
 const LISTENER_SERVICE: &str = "hypr-listener.service";
 const SNAPSHOT_SERVICE: &str = "hypr-snapshot.service";

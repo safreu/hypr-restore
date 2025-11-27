@@ -74,22 +74,22 @@ pub struct FileContentPopUp;
 
 impl PopupBehavior for FileContentPopUp {
     fn run_command(&self, popup: &Popup<Self>) {
-        let args = match popup.entries[popup.selected_entry].clone().as_str() {
-            "snapshot" => Some(["snapshot"]),
-            "restore" => Some(["restore"]),
+        let maybe_arg = match popup.entries[popup.selected_entry].as_str() {
+            "snapshot" => Some("snapshot"),
+            "restore" => None,
             _ => return,
         };
-        if let Some(args) = args {
-            let mut cmd = Command::new("hypr-restore");
-            cmd.args(args)
-                .stdout(Stdio::null())
-                .stderr(Stdio::null())
-                .stdin(Stdio::null());
+        let mut cmd = Command::new("hypr-restore");
 
-            if let Err(e) = cmd.spawn() {
-                eprintln!("Failed to run command: {e}");
-            }
+        if let Some(arg) = maybe_arg {
+            cmd.arg(arg);
         }
+
+        cmd.stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .stdin(Stdio::null());
+
+        let _ = cmd.status();
     }
 }
 

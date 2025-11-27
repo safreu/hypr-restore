@@ -1,4 +1,5 @@
 use crate::tui::{App, Tab};
+use ansi_to_tui::IntoText;
 use ratatui::layout::{Constraint, Direction, Layout};
 use ratatui::text::Text;
 use ratatui::widgets::Borders;
@@ -39,7 +40,7 @@ fn render_listener_service_windows(frame: &mut Frame, rect: Rect) {
     let lower_block = Block::new().borders(Borders::ALL);
 
     frame.render_widget(
-        Paragraph::new(Text::raw(run_systemctl("hypr-listener"))).block(upper_block),
+        Paragraph::new(run_systemctl("hypr-listener")).block(upper_block),
         upper,
     );
 
@@ -57,7 +58,7 @@ fn render_restore_service_windows(frame: &mut Frame, rect: Rect) {
     let lower_block = Block::new().borders(Borders::ALL);
 
     frame.render_widget(
-        Paragraph::new(Text::raw(run_systemctl("hypr-snapshot"))).block(upper_block),
+        Paragraph::new(run_systemctl("hypr-snapshot")).block(upper_block),
         upper,
     );
 
@@ -104,19 +105,19 @@ fn create_horizontal_layout(rect: Rect) -> [ratatui::layout::Rect; 2] {
     [left_layout, right_layout]
 }
 
-fn run_systemctl(service_name: &str) -> std::string::String {
+fn run_systemctl(service_name: &str) -> Text<'_> {
     let systemctl_output = Command::new("systemctl")
         .args(["--user", "status", service_name])
         .output()
         .expect("Failed to run systemctl");
 
     let converted_output = String::from_utf8_lossy(&systemctl_output.stdout);
+    let header = converted_output.split("\n\n").next().unwrap_or("");
 
-    converted_output
-        .split("\n\n")
-        .next()
-        .unwrap_or("")
-        .to_string()
+    header
+        .as_bytes()
+        .into_text()
+        .unwrap_or_else(|_| Text::raw("failed to parse"))
 }
 
 fn run_journalctl(service_name: &str) -> std::string::String {
