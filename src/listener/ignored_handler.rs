@@ -30,7 +30,6 @@ impl IgnoredHandler {
     ///
     /// # Arguments
     /// * `class` := The class of an open window event
-    /// * `address` := The address of an open window event
     ///
     /// # Returns
     /// True in case it should be skipped, else False

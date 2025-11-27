@@ -1,5 +1,5 @@
 #[cfg(test)]
-mod ignored_handler_tests {
+mod tests {
     use crate::listener::ignored_handler::IgnoredHandler;
     use std::fs;
     use tempfile::tempdir;
@@ -41,7 +41,7 @@ mod ignored_handler_tests {
 
         let result = ignored_handler.should_ignore("unskippable_class");
 
-        assert_eq!(result, false);
+        assert!(!result);
     }
 
     #[test]
@@ -55,10 +55,6 @@ mod ignored_handler_tests {
 
         let result = ignored_handler.should_ignore("skippable_class");
 
-        assert_eq!(result, true);
+        assert!(result);
     }
-
-    //Not sure how I should implement the tests for should_skip
-    //TODO: Implement the tests for should_skip()
 }
-

@@ -59,9 +59,10 @@ impl ExecutablesHandler {
     ///
     /// # Returns
     /// the Path to execute the application
-    #[allow(dead_code)]
+    ///
+    //Fixme: Get the value not from exe but from cmdline to make sure its correct, e.g Applications like Obsidian (Electron) have the path to Electron as exe not their actual
     pub fn get_executable_path_from_env(address: &str) -> Result<String, Error> {
-        let pid = crate::shared::get_pid(address);
+        let pid = crate::shared::get_pid(address)?;
         let path = fs::read_link(format!("/proc/{}/exe", pid))?;
         Ok(path.to_string_lossy().into_owned())
     }

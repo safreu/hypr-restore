@@ -103,7 +103,7 @@ impl EventEntry {
     /// Creates a new EventEntry with the previous data except for the new workspace
     ///
     /// # Arguments
-    /// * `workspace` := The workspace you want to override
+    /// * `workspace` := The workspace you want to overwrite
     ///
     /// Returns
     /// Self
@@ -118,6 +118,7 @@ impl EventEntry {
 }
 
 impl fmt::Display for EventEntry {
+    /// Implements the to_string function for EventEntry
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,

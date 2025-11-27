@@ -39,7 +39,7 @@ impl EventValidation {
     /// * `event` := The event to insert
     ///
     /// # Returns
-    /// If successfully an empty Result or the EventEntry
+    /// If successfully an empty Result else the EventEntry
     pub fn try_insert(&mut self, event: EventEntry) -> Result<(), EventEntry> {
         println!("{}", event);
         if self.ignored_handler.should_ignore(event.class()) {
@@ -67,7 +67,7 @@ impl EventValidation {
     /// * `address` := The address you want to remove
     ///
     /// # Returns
-    /// If successfully an empty Result or the address
+    /// If successfully an empty Result else the address
     pub fn try_remove(&mut self, address: &str) -> Result<(), String> {
         match self.db.remove(address) {
             Ok(_) => Ok(()),

@@ -44,7 +44,7 @@ impl EventDb {
     /// * `address` := The address by which the entry should be removed
     ///
     /// # Returns
-    /// io::Result
+    /// empty io::Result
     pub fn remove(&mut self, address: &str) -> io::Result<()> {
         if let Some(index) = self.get_index(address) {
             self.table.remove(index);
@@ -52,7 +52,7 @@ impl EventDb {
         self.file_handler.remove_line(&mut self.table)
     }
 
-    /// Updated the workspace of an entry, identified by the address
+    /// Updates the workspace of an entry, identified by the address
     ///
     /// # Arguments
     /// * `address` := The address of the application
@@ -90,4 +90,3 @@ impl EventDb {
             .position(|entry| entry.address() == address)
     }
 }
-

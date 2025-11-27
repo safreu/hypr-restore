@@ -8,13 +8,6 @@ use ratatui::{
     widgets::{Block, Paragraph},
 };
 use std::process::Command;
-#[derive(Debug, Default, Eq, PartialEq)]
-pub enum Window {
-    #[default]
-    First,
-    Second,
-    PopUp,
-}
 
 pub fn draw_windows(app: &mut App, frame: &mut Frame, rect: Rect) {
     match app.tab_state.active_tab() {

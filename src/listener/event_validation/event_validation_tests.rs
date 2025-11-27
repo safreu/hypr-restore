@@ -1,8 +1,8 @@
 #[cfg(test)]
-mod event_validation_tests {
-    use tempfile::tempdir;
+mod tests {
     use crate::listener::event_validation::EventValidation;
     use crate::shared::event_entry::EventEntry;
+    use tempfile::tempdir;
 
     #[test]
     fn construct_event_validation() {
@@ -21,15 +21,13 @@ mod event_validation_tests {
         let executables_path = dir.path().join("executables.path");
         let mut validator = EventValidation::new(db_path.clone(), ignore_path, executables_path);
 
-        let event = EventEntry::new(
-            &vec![
-                "open_event".to_string(),
-                "address".to_string(),
-                "workspace".to_string(),
-                "class".to_string(),
-                "title".to_string()
-            ]
-        );
+        let event = EventEntry::new(&[
+            "open_event".to_string(),
+            "address".to_string(),
+            "workspace".to_string(),
+            "class".to_string(),
+            "title".to_string(),
+        ]);
 
         let result = validator.try_insert(event);
 

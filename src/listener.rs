@@ -22,6 +22,7 @@ pub fn execute() -> io::Result<()> {
     let instance = InstanceHandler::new();
     let mut event_validator = EventValidation::new(shared::db_path(), shared::ignore_path(), shared::executables_path());
 
+    
     for line in instance.reader().lines() {
         match line {
             Ok(line) => {

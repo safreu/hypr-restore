@@ -4,6 +4,7 @@ use std::fs::File;
 use std::process::Command;
 use std::{fs, io};
 
+/// Installs the hypr-restore correctly to give full access to the functionality
 pub(crate) fn execute() {
     let hypr_restore_service = r#"
 [Unit]

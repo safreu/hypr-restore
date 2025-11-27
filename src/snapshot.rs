@@ -1,12 +1,13 @@
+use crate::shared;
+use log::warn;
 use std::fs;
 use std::path::{Path, PathBuf};
-use crate::shared;
 
 mod snapshot_tests;
 
+/// Executes the create_snapshot function
 pub fn execute() -> std::io::Result<()> {
     create_snapshot(&shared::db_path(), &shared::snapshot_path(), true)
-
 }
 
 /// Creates a snapshot on a given file
@@ -18,10 +19,25 @@ pub fn execute() -> std::io::Result<()> {
 ///
 ///  # Returns
 ///  io Result if it was successfully or not
-pub fn create_snapshot(to_be_snapped: &PathBuf, snapshot_path: &PathBuf, delete: bool) -> std::io::Result<()> {
+pub fn create_snapshot(
+    to_be_snapped: &PathBuf,
+    snapshot_path: &PathBuf,
+    delete: bool,
+) -> std::io::Result<()> {
     if Path::exists(Path::new(&to_be_snapped)) {
-        fs::copy(to_be_snapped, snapshot_path)?;
-        if delete { fs::remove_file(to_be_snapped)? }
+        fs::copy(to_be_snapped, snapshot_path).unwrap_or_else(|e| {
+            panic!(
+                "Copying [{}] to [{}] was not possible: {}",
+                to_be_snapped.display(),
+                snapshot_path.display(),
+                e
+            )
+        });
+        if delete {
+            fs::remove_file(to_be_snapped).unwrap_or_else(|_| {
+                warn!("Failed to delete [{}]", to_be_snapped.display());
+            });
+        }
     }
     Ok(())
 }

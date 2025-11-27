@@ -1,4 +1,5 @@
 use serde_json::Value;
+use std::io;
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -57,35 +58,36 @@ pub fn executables_path() -> PathBuf {
 /// Gets the Pid of the window process based on the hyprland address
 ///
 /// # Arguments
-///
 /// `address` := the hyprland address, can be obtained via the open window event
 ///
 /// # Returns
-/// The PID
-pub fn get_pid(address: &str) -> i64 {
+/// and Result containing the pid or an Error
+pub fn get_pid(address: &str) -> Result<i64, io::Error> {
     if std::env::var("TEST_NO_HYPRCTL").is_ok() {
-        return 0;
+        return Ok(0);
     }
 
-    let pid: i64 = 0;
     let output = Command::new("hyprctl")
         .args(["clients", "-j"])
         .output()
-        .expect("Failed to run hyprctl");
+        .expect("Failed to run hyprctl clients -j");
 
-    if !output.status.success() {
-        return 0;
-    }
     let stdout = String::from_utf8_lossy(&output.stdout);
 
-    let json: Value = serde_json::from_str(&stdout).expect("Failed to parse output");
+    let json: Value =
+        serde_json::from_str(&stdout).expect("Failed to parse output from hyprctl clients -j");
 
     if let Some(array) = json.as_array() {
         for value in array {
             if value["address"] == address {
-                return value["pid"].as_i64().unwrap_or(0);
+                return value["pid"].as_i64().ok_or_else(|| {
+                    io::Error::new(io::ErrorKind::InvalidData, "PID was not an integer")
+                });
             }
         }
     }
-    pid
+    Err(io::Error::new(
+        io::ErrorKind::NotFound,
+        format!("Failed to get pid for {}", address),
+    ))
 }
