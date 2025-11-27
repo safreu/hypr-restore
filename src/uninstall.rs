@@ -1,4 +1,4 @@
-use crate::{LISTENER_SERVICE, SNAPSHOT_SERVICE, destination_share, systemd};
+use crate::{LISTENER_SERVICE, SNAPSHOT_SERVICE, config_dir, destination_share, systemd};
 use colored::Colorize;
 use std::fs;
 use std::process::Command;
@@ -14,6 +14,11 @@ pub(crate) fn execute() {
             destination_share(&home_dir).display()
         ),
         || fs::remove_dir_all(destination_share(&home_dir)).map_err(|e| e.to_string()),
+    );
+
+    run_step_eprintln(
+        &format!("removing config dir: {}", config_dir(&home_dir).display()),
+        || fs::remove_dir_all(config_dir(&home_dir)).map_err(|e| e.to_string()),
     );
 
     run_step_eprintln("Stopping hypr-listener.service", || {
@@ -79,4 +84,3 @@ where
 
     println!();
 }
-

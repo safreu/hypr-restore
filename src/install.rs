@@ -1,6 +1,7 @@
-use crate::{LISTENER_SERVICE, SNAPSHOT_SERVICE, destination_share, systemd};
+use crate::{LISTENER_SERVICE, SNAPSHOT_SERVICE, config_dir, destination_share, systemd};
 use colored::Colorize;
 use std::fs::File;
+use std::os::unix::fs::symlink;
 use std::process::Command;
 use std::{fs, io};
 
@@ -61,6 +62,20 @@ WantedBy=default.target
         File::create(destination_share(&home_dir).join("executables.path"))
     });
 
+    run_step_panic(
+        &format!(
+            "Creating config dir at [{}]",
+            config_dir(&home_dir).display()
+        ),
+        || fs::create_dir_all(config_dir(&home_dir)),
+    );
+
+    run_step_panic("Creating a link to classes.ignore in config dir", || {
+        symlink(
+            destination_share(&home_dir).join("classes.ignore"),
+            config_dir(&home_dir).join("classes.ignore"),
+        )
+    });
     run_step_panic(
         &format!(
             "{} {}",
