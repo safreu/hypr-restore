@@ -8,6 +8,8 @@ After your system boots, the `hypr-snapshot.service` creates a snapshot of this 
 so your applications can be restored to the workspaces they were previously located on.
 After creating the snapshot, the service clears the database so it can begin tracking the new session.
 
+![TUI Demo](./.assets/embedded.gif)
+
 ## Table of Contents
 
 - [Built With](#built-with)

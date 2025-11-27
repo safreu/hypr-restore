@@ -1,6 +1,6 @@
 [package]
 name = "hypr-restore"
-version = "0.1.2"
+version = "0.2.0"
 edition = "2024"
 authors = ["Samuel Freundel"]
 license = "MIT"
@@ -10,12 +10,12 @@ keywords = ["hyprland", "backup", "restore", "event-listener", "tracker"]
 categories = ["command-line-utilities"]
 readme = "./readme.md"
 exclude = [
-    ".idea/",
-    ".github/",
-    ".cargo_vcs_info.json",
-    "Cargo.toml.orig",
-    ".gitignore",
-    "Cargo.lock"
+  ".idea/",
+  ".github/",
+  ".cargo_vcs_info.json",
+  "Cargo.toml.orig",
+  ".gitignore",
+  "Cargo.lock",
 ]
 
 [lib]
@@ -37,3 +37,4 @@ regex = "1.12.2"
 ratatui = "0.29.0"
 crossterm = "0.29.0"
 sha2 = "0.10.9"
+ansi-to-tui = "7.0.0"
