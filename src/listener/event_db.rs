@@ -1,9 +1,9 @@
 mod event_db_tests;
 
-use std::io;
-use std::path::PathBuf;
 use crate::shared::event_entry::EventEntry;
 use crate::shared::file_handler::FileHandler;
+use std::io;
+use std::path::PathBuf;
 
 /// An EventDB used to store the open window Events
 pub struct EventDb {
@@ -12,7 +12,6 @@ pub struct EventDb {
 }
 
 impl EventDb {
-
     /// Constructs a new EventDb, based on the given Path
     ///
     /// # Arguments
@@ -34,7 +33,9 @@ impl EventDb {
     pub fn insert(&mut self, event: EventEntry) {
         let printable = event.to_string();
         self.table.push(event);
-        self.file_handler.write(printable.as_str()).expect("Error writing to file");
+        self.file_handler
+            .write(printable.as_str())
+            .expect("Error writing to file");
     }
 
     /// Removes an EventEntry from to EventDb
@@ -60,13 +61,13 @@ impl EventDb {
     /// # Returns
     /// An Option based on if the Operation was a success
     pub fn update_workspace(&mut self, address: &str, workspace: &str) -> Option<EventEntry> {
-        if let Some(index) = self.get_index(address) {
-            if let Some(to_be_updated) = self.table.get_mut(index) {
-                let updated = to_be_updated.set_workspace(workspace);
-                self.table[index] = updated.clone();
-                let _ = self.file_handler.remove_line(&mut self.table);
-                return Some(updated);
-            }
+        if let Some(index) = self.get_index(address)
+            && let Some(to_be_updated) = self.table.get_mut(index)
+        {
+            let updated = to_be_updated.set_workspace(workspace);
+            self.table[index] = updated.clone();
+            let _ = self.file_handler.remove_line(&mut self.table);
+            return Some(updated);
         }
         None
     }
@@ -84,6 +85,9 @@ impl EventDb {
         } else {
             address.to_string()
         };
-        self.table.iter().position(|entry| entry.address() == address)
+        self.table
+            .iter()
+            .position(|entry| entry.address() == address)
     }
 }
+

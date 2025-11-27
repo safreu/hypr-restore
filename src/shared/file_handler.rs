@@ -76,7 +76,7 @@ impl FileHandler {
         let mut writer = BufWriter::new(file);
 
         for line in table {
-            writeln!(writer, "{}", line.to_string())?;
+            writeln!(writer, "{}", line)?;
         }
         writer.flush()
     }

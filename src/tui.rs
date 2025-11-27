@@ -1,7 +1,7 @@
-mod popup;
 mod file_content_provider;
 mod input_handler;
 mod navigation_bar;
+mod popup;
 mod tab;
 mod window;
 
@@ -11,13 +11,10 @@ use input_handler::*;
 use navigation_bar::draw_navigation_bar;
 use ratatui::layout::{Constraint, Direction, Layout};
 use ratatui::style::{Color, Modifier, Style, Stylize};
+use ratatui::text::Line;
 use ratatui::text::Span;
-use ratatui::text::{Line};
-use ratatui::widgets::{Borders};
-use ratatui::{
-    DefaultTerminal, Frame,
-    widgets::{Block},
-};
+use ratatui::widgets::Borders;
+use ratatui::{DefaultTerminal, Frame, widgets::Block};
 
 use std::io;
 use tab::Tab;
@@ -107,7 +104,7 @@ impl App {
     }
 }
 
-fn highlight_line(entry: &str) -> Line {
+fn highlight_line(entry: &str) -> Line<'_> {
     Line::from(Span::styled(
         entry,
         Style::default()

@@ -45,7 +45,7 @@ impl FileContentProvider {
         );
     }
 
-    pub fn provide_keys(&self) -> Vec<Line> {
+    pub fn provide_keys(&self) -> Vec<Line<'_>> {
         self.content_list
             .iter()
             .enumerate()
@@ -59,7 +59,7 @@ impl FileContentProvider {
             .collect()
     }
 
-    pub fn provide_values(&self) -> Text {
+    pub fn provide_values(&self) -> Text<'_> {
         let selected_command = self.content_list[self.content_highlight].clone();
         let selected_entries = self.content_entries.get(&selected_command).unwrap();
         Text::from(selected_entries.join("\n"))

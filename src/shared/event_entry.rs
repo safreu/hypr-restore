@@ -1,8 +1,8 @@
 mod event_entry_tests;
 
 use regex::Regex;
+use std::fmt;
 use std::sync::OnceLock;
-
 /// The EventEntry handles everything related to the contents of the open window event
 ///
 /// * `address` := The hyprland address
@@ -85,14 +85,6 @@ impl EventEntry {
         }
     }
 
-    /// Returns the content of the struct EventEntry, concatenated as String
-    pub fn to_string(&self) -> String {
-        format!(
-            "{},{},{},{}",
-            self.address, self.workspace, self.class, self.title
-        )
-    }
-
     /// Returns the address as &str
     pub fn address(&self) -> &str {
         self.address.as_str()
@@ -125,3 +117,12 @@ impl EventEntry {
     }
 }
 
+impl fmt::Display for EventEntry {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{},{},{},{}",
+            self.address, self.workspace, self.class, self.title
+        )
+    }
+}
